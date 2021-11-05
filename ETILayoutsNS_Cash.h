@@ -64,7 +64,6 @@
 #define NO_VALUE_SCHAR                                   ((int8_t) 0x80)
 #define NO_VALUE_UCHAR                                   ((uint8_t) 0xff)
 #define NO_VALUE_STR                                     0
-#define NO_VALUE_DATA_16                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 /*
  * Template IDs defines
@@ -4350,8 +4349,6 @@ typedef struct
 /*
  * Begin of DEPRECATED defines
  */
-
-#define BYTE_ARRAY_OF_0_16 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 #define	TID_APPROVETESTRADEREQUEST                       10603		// < ApproveTESTradeRequest (Approve TES Trade Request)
 #define	TID_BROADCASTERRORNOTIFICATION                   10032		// < BroadcastErrorNotification (Gap Fill)
