@@ -35,17 +35,19 @@
  *
  *******************************************************************************/
 
-#ifndef __ETI_CASH_LAYOUTS_WITH_NAMESPACE__
-#define __ETI_CASH_LAYOUTS_WITH_NAMESPACE__
-
-#include <stdint.h>
-
-#if defined(__cplusplus) || defined(c_plusplus)
-namespace Cash
-{
-extern "C"
-{
-#endif
+/*
+ * #ifndef __ETI_CASH_LAYOUTS_WITH_NAMESPACE__
+ * #define __ETI_CASH_LAYOUTS_WITH_NAMESPACE__
+ * 
+ * #include <stdint.h>
+ * 
+ * #if defined(__cplusplus) || defined(c_plusplus)
+ * namespace Cash
+ * {
+ * extern "C"
+ * {
+ * #endif
+ */
 
 #define ETI_INTERFACE_VERSION "9.1"
 #define ETI_BUILD_NUMBER      "91.344.1.ga-91004030-89"
@@ -5301,9 +5303,11 @@ typedef struct
  * End of DEPRECATED defines
  */
 
-#if defined(__cplusplus) || defined(c_plusplus)
-} /* close scope of 'extern "C"' declaration. */
-} /* close namespace Cash */
-#endif
-
-#endif
+/*
+ * #if defined(__cplusplus) || defined(c_plusplus)
+ * } /\* close scope of 'extern "C"' declaration. *\/
+ * } /\* close namespace Cash *\/
+ * #endif
+ * 
+ * #endif
+ */
