@@ -25,7 +25,6 @@ def define_to_dots(line: str) -> str:
     return line
 
 file = "".join([define_to_dots(line) for line in open("ETILayoutsNS_Cash.h", "r")])
-print(file)
 ffibuilder.cdef(file)
 
 # for line in open("ETILayoutsNS_Cash.h", "r"):

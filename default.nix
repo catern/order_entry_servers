@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import ./pinned.nix }:
 
 with pkgs.python39Packages;
 buildPythonPackage {
@@ -13,6 +13,7 @@ buildPythonPackage {
   ];
 
   propagatedBuildInputs = [
-    # rsyscall
+    rsyscall
+    # (rsyscall.overrideAttrs (old: { src = /home/sbaugh/.local/src/rsyscall/python; }))
   ];
 }
