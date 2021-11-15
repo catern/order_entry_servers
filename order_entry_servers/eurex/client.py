@@ -21,6 +21,19 @@ class OrderFilled(OrderDead):
     pass
 
 @dataclasses.dataclass
+class Cancel:
+    order: Order
+    cl_ord_id: ClOrdID
+
+    def __post_init__(self) -> None:
+        dneio.reset(self._run())
+
+    async def _run(self) -> None:
+        while True:
+            msg = await self.cl_ord_id.queue.get()
+            raise Exception(self, "got unexpected message for cancel")
+
+@dataclasses.dataclass
 class Order:
     client: Client
     cl_ord_id: ClOrdID
@@ -37,6 +50,18 @@ class Order:
     @property
     def quantity(self) -> int:
         return self.new_order_single.OrderQty
+
+    async def cancel(self) -> None:
+        cl_ord_id = self.client._allocate_cl_ord_id()
+        cancel_order_single = await self.client.send('DeleteOrderSingleRequestT', {
+            'ClOrdID': cl_ord_id.number,
+            'OrigClOrdID': self.cl_ord_id.number,
+        })
+        msg = await cl_ord_id.queue.get()
+        type = ffi.typeof(msg).cname
+        if type != 'DeleteOrderResponseT':
+            raise Exception(self, "got unexpected response to cancel", msg, ps(msg))
+        return Cancel(self, cl_ord_id)
 
     async def _run(self) -> None:
         while True:
@@ -137,7 +162,6 @@ class Client:
     async def send_order(self, price: Decimal, quantity: int, side: Side, tif: TimeInForce) -> Order:
         cl_ord_id = self._allocate_cl_ord_id()
         new_order_single = await self.send('NewOrderSingleShortRequestT', {
-            'RequestHeader': {'MsgSeqNum': 2},
             'Price': decimal_to_price(price),
             'OrderQty': quantity,
             'ClOrdID': cl_ord_id.number,

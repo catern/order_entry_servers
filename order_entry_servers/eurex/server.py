@@ -20,6 +20,25 @@ class ServerOrder:
     new_order_single: ffi.CData
     fills: List[Fill]
 
+    def __post_init__(self) -> None:
+        dneio.reset(self._run())
+
+    async def _run(self) -> None:
+        while True:
+            msg = await self.cl_ord_id.queue.get()
+            type = ffi.typeof(msg).cname
+            if type in ['DeleteOrderSingleRequestT']:
+                await self.connection.send('DeleteOrderResponseT', {
+                    'ResponseHeaderME': {
+                    },
+                    'ClOrdID': msg.ClOrdID,
+                    'OrigClOrdID': msg.OrigClOrdID,
+                    'OrdStatus': get_enum_bytes("OrdStatus", "PendingCancel"),
+                })
+                await self.unsolicited_cancel()
+            else:
+                raise Exception(self, "got unhandled", msg, ps(msg))
+
     async def accept(self, canceled: bool=False) -> None:
         await self.connection.send('NewOrderResponseT', {
             'ResponseHeaderME': {
@@ -70,6 +89,7 @@ class ServerOrder:
             'FillsGrp': [fill.render() for fill in fills],
         })
 
+
 @dataclasses.dataclass
 class Connection:
     server: Server
@@ -116,6 +136,9 @@ class Connection:
                     await self.send('UserLoginResponseT', {})
                 elif type == ffi.typeof('NewOrderSingleShortRequestT'):
                     cl_ord_id = self.server._add_cl_ord_id(msg.ClOrdID)
+                    self.server.orders.put(ServerOrder(self, cl_ord_id, msg, fills=[]))
+                elif type == ffi.typeof('DeleteOrderSingleRequestT'):
+                    self.server.cl_ord_ids[msg.OrigClOrdID].queue.put(msg)
                     self.server.orders.put(ServerOrder(self, cl_ord_id, msg, fills=[]))
                 else:
                     raise Exception("got unhandled", msg, ps(msg))

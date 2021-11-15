@@ -6,6 +6,9 @@ from rsyscall.sys.un import SockaddrUn
 from order_entry_servers.eurex.server import Server
 from order_entry_servers.eurex.client import Client, OrderCanceled, OrderFilled
 from order_entry_servers.eurex.protocol import *
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Test(TrioTestCase):
     async def asyncSetUp(self) -> None:
@@ -25,12 +28,14 @@ class Test(TrioTestCase):
         self.client = await Client.connect(self.nursery, connected, [User(123, b"pass")])
 
     async def test_main(self) -> None:
+        logger.info("Rejected/canceled without filling")
         order = await self.client.send_order(Decimal('50.1'), 100, Side.Buy, TimeInForce.Day)
         server_order = await self.server.orders.get()
         await server_order.accept(canceled=True)
         with self.assertRaises(OrderCanceled):
             await order.fills.get()
 
+        logger.info("Full fill on accept")
         order = await self.client.send_order(Decimal('50.1'), 100, Side.Buy, TimeInForce.Day)
         server_order = await self.server.orders.get()
         await server_order.accept_fill(order.price, order.quantity)
@@ -39,6 +44,7 @@ class Test(TrioTestCase):
         with self.assertRaises(OrderFilled):
             print(await order.fills.get())
 
+        logger.info("Fill and unsolicited cancel")
         order = await self.client.send_order(Decimal('50.1'), 100, Side.Buy, TimeInForce.Day)
         server_order = await self.server.orders.get()
         await server_order.accept()
@@ -48,3 +54,10 @@ class Test(TrioTestCase):
         with self.assertRaises(OrderCanceled):
             print(await order.fills.get())
 
+        logger.info("Solicited cancel")
+        order = await self.client.send_order(Decimal('50.1'), 100, Side.Buy, TimeInForce.Day)
+        server_order = await self.server.orders.get()
+        await server_order.accept()
+        await order.cancel()
+        with self.assertRaises(OrderCanceled):
+            print(await order.fills.get())
