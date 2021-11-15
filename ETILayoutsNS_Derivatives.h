@@ -35,17 +35,19 @@
  *
  *******************************************************************************/
 
-#ifndef __ETI_DERIVATIVES_LAYOUTS_WITH_NAMESPACE__
-#define __ETI_DERIVATIVES_LAYOUTS_WITH_NAMESPACE__
-
-#include <stdint.h>
-
-#if defined(__cplusplus) || defined(c_plusplus)
-namespace Derivatives
-{
-extern "C"
-{
-#endif
+/*
+ * #ifndef __ETI_DERIVATIVES_LAYOUTS_WITH_NAMESPACE__
+ * #define __ETI_DERIVATIVES_LAYOUTS_WITH_NAMESPACE__
+ * 
+ * #include <stdint.h>
+ * 
+ * #if defined(__cplusplus) || defined(c_plusplus)
+ * namespace Derivatives
+ * {
+ * extern "C"
+ * {
+ * #endif
+ */
 
 #define ETI_INTERFACE_VERSION "9.1"
 #define ETI_BUILD_NUMBER      "91.344.1.ga-91004030-89"
@@ -62,7 +64,9 @@ extern "C"
 #define NO_VALUE_SCHAR                                   ((int8_t) 0x80)
 #define NO_VALUE_UCHAR                                   ((uint8_t) 0xff)
 #define NO_VALUE_STR                                     0
-#define NO_VALUE_DATA_16                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+/*
+ * #define NO_VALUE_DATA_16                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+ */
 
 /*
  * Template IDs defines
@@ -5683,7 +5687,9 @@ typedef struct
  * Begin of DEPRECATED defines
  */
 
-#define BYTE_ARRAY_OF_0_16 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+/*
+ * #define BYTE_ARRAY_OF_0_16 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+ */
 
 #define	TID_ADDCOMPLEXINSTRUMENTREQUEST                  10301		// < AddComplexInstrumentRequest (Create Strategy)
 #define	TID_ADDCOMPLEXINSTRUMENTRESPONSE                 10302		// < AddComplexInstrumentResponse (Create Strategy Response)
@@ -6784,9 +6790,11 @@ typedef struct
  * End of DEPRECATED defines
  */
 
-#if defined(__cplusplus) || defined(c_plusplus)
-} /* close scope of 'extern "C"' declaration. */
-} /* close namespace Derivatives */
-#endif
-
-#endif
+/*
+ * #if defined(__cplusplus) || defined(c_plusplus)
+ * } /\* close scope of 'extern "C"' declaration. *\/
+ * } /\* close namespace Derivatives *\/
+ * #endif
+ * 
+ * #endif
+ */
