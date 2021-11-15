@@ -25,5 +25,8 @@ class Test(TrioTestCase):
         self.client = await Client.connect(self.nursery, connected, [User(123, b"pass")])
 
     async def test_main(self) -> None:
-        await self.client.send_order(Decimal('50.0'), 100, Side.Buy, TimeInForce.Day)
+        order = await self.client.send_order(Decimal('50.0'), 100, Side.Buy, TimeInForce.Day)
+        server_order = await self.server.orders.get()
+        await server_order.fill(order.price, order.quantity)
+        print(ps(await order.fills.get()))
 

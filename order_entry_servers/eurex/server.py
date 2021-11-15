@@ -6,37 +6,51 @@ from rsyscall.epoller import AsyncReadBuffer
 from order_entry_servers.eurex.protocol import *
 
 @dataclasses.dataclass
-class Connection:
-    buf: AsyncReadBuffer
-    seq_num: int = 1
+class ServerOrder:
+    connection: Connection
+    cl_ord_id: ClOrdID
+    new_order_single: ffi.CData
 
-    async def send(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
-        seq_num = self.seq_num
-        self.seq_num += 1
-        msg = to_out_struct(msg_type, {
-            **fields,
-            'ResponseHeader': {
-                'RequestTime': time.time_ns(),
-                'SendingTime': time.time_ns(),
-                'MsgSeqNum': seq_num,
+    async def accept(self) -> None:
+        await self.connection.send('NewOrderResponseT', {
+            'ResponseHeaderME': {
             },
         })
+
+    async def accept_fill(self, price: Decimal, quantity: int) -> None:
+        await self.connection.send('OrderExecResponseT', {
+        })
+
+    async def fill(self, price: Decimal, quantity: int) -> None:
+        await self.connection.send('OrderExecNotificationT', {
+            'RBCHeaderME': {
+            },
+            'ClOrdID': self.cl_ord_id.number,
+            'OrigClOrdID': self.cl_ord_id.number,
+        })
+
+@dataclasses.dataclass
+class Connection:
+    server: Server
+    buf: AsyncReadBuffer
+
+    async def send(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
+        msg = to_out_struct(msg_type, fields)
         await self.buf.fd.write_all_bytes(bytes(ffi.buffer(msg)))
         return msg
 
     async def recv(self, msg_type: str=None) -> ffi.CData:
-        data = await self.buf.read_length(ffi.sizeof('MessageHeaderInCompT'))
-        header = ffi.cast('MessageHeaderInCompT*', ffi.from_buffer(data))
-        data += await self.buf.read_length(header.BodyLen - len(data))
-        msg = ffi.cast(tid_to_type[header.TemplateID] + '*', ffi.from_buffer(data))[0]
+        header = await self.buf.read_cffi('MessageHeaderInCompT', remove=False)
+        msg = copy_cast(tid_to_type[header.TemplateID], await self.buf.read_length(header.BodyLen))
         if msg_type:
             assert ffi.typeof(msg) == ffi.typeof(msg_type)
         return msg
 
     @classmethod
-    async def accept(cls, nursery: trio.Nursery, sock: AsyncFileDescriptor) -> Connection:
+    async def accept(cls, server: Server, nursery: trio.Nursery, sock: AsyncFileDescriptor) -> Connection:
         self = cls(
-            AsyncReadBuffer(sock),
+            server,
+            AsyncReadBuffer(sock, parsing_ffi=ffi),
         )
         logon = await self.recv('LogonRequestT')
         logon_response = await self.send('LogonResponseT', {
@@ -58,19 +72,25 @@ class Connection:
                 msg = await self.recv()
                 type = ffi.typeof(msg)
                 if type == ffi.typeof('UserLoginRequestT'):
-                    await self.send('UserLoginResponseT', {
-                    })
+                    await self.send('UserLoginResponseT', {})
+                elif type == ffi.typeof('NewOrderSingleShortRequestT'):
+                    cl_ord_id = self.server._add_cl_ord_id(msg.ClOrdID)
+                    self.server.orders.put(ServerOrder(self, cl_ord_id, msg))
                 else:
                     raise Exception("got unhandled", msg, ps(msg))
 
 @dataclasses.dataclass
 class Server:
     listening: AsyncFileDescriptor
+    cl_ord_ids: Dict[int, ClOrdID]
+    orders: PersistentQueue[ServerOrder]
 
     @classmethod
     async def start(cls, nursery: trio.Nursery, listening: AsyncFileDescriptor) -> Server:
         self = cls(
             listening,
+            {},
+            PersistentQueue(),
         )
         nursery.start_soon(self._run)
         return self
@@ -79,5 +99,10 @@ class Server:
         async with trio.open_nursery() as nursery:
             while True:
                 connected_sock = await self.listening.make_new_afd(await self.listening.accept(SOCK.NONBLOCK))
-                await Connection.accept(nursery, connected_sock)
+                await Connection.accept(self, nursery, connected_sock)
+
+    def _add_cl_ord_id(self, number: int) -> ClOrdID:
+        ret = ClOrdID(number)
+        self.cl_ord_ids[number] = ret
+        return ret
                 

@@ -4,10 +4,50 @@ from typing import *
 import re
 import dataclasses
 from decimal import Decimal
+import dneio
+
+T = TypeVar('T')
+
+@dataclasses.dataclass
+class PersistentQueue(Generic[T]):
+    data: List[T] = dataclasses.field(default_factory=list)
+    idx: int = 0
+    _waiting_cbs: t.List[dneio.Continuation[None]] = dataclasses.field(default_factory=list)
+
+    async def get(self) -> T:
+        while self.idx >= len(self.data):
+            await dneio.shift(self._waiting_cbs.append)
+        self.idx += 1
+        return self.data[self.idx-1]
+
+    def put(self, val: T) -> None:
+        self.data.append(val)
+        waiting, self._waiting_cbs = self._waiting_cbs, []
+        for cb in waiting:
+            cb.send(None)
+
+@dataclasses.dataclass
+class ClOrdID:
+    number: int
+    queue: PersistentQueue[ffi.CData] = dataclasses.field(default_factory=PersistentQueue)
         
+def copy_cast(type: str, data: bytes) -> ffi.CData:
+    # ffi.cast drops the reference to the backing buffer, so we have to allocate some space and copy into there
+    buf = ffi.new(type + '*')
+    ffi.memmove(buf, ffi.cast(type + '*', ffi.from_buffer(data)), min(ffi.sizeof(buf[0]), len(data)))
+    return buf[0]
+
 def camel_to_snake(name: str) -> str:
   name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
   return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
+
+def decimal_to_price(decimal: Decimal) -> int:
+    scaled = decimal.scaleb(8)
+    assert int(scaled) == scaled
+    return int(scaled)
+
+def price_to_decimal(price: int) -> Decimal:
+    return Decimal(price).scaleb(-8)
 
 def get_tid(msg_type: str) -> int:
     return getattr(lib, 'TID_' + camel_to_snake(msg_type[:-1]).upper())
@@ -60,7 +100,8 @@ def render(typ, val: Any) -> Any:
             return ret
     elif typ.kind == 'struct':
         return {name: render(field.type, getattr(val, name))
-                for name, field in typ.fields}
+                for name, field in typ.fields
+                if not name.startswith('Pad')}
     elif typ.kind == 'pointer':
         return render(typ.item, val[0])
     else:
@@ -68,10 +109,6 @@ def render(typ, val: Any) -> Any:
 
 def ps(val) -> Any:
     return render(ffi.typeof(val), val)
-
-@dataclasses.dataclass
-class Order:
-    pass
 
 import enum
 class Side(enum.Enum):

@@ -13,7 +13,7 @@ buildPythonPackage {
   ];
 
   propagatedBuildInputs = [
-    rsyscall
-    # (rsyscall.overrideAttrs (old: { src = /home/sbaugh/.local/src/rsyscall/python; }))
+    # rsyscall
+    (rsyscall.overrideAttrs (old: { src = /home/sbaugh/.local/src/rsyscall/python; }))
   ];
 }
