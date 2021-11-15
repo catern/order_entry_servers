@@ -1,0 +1,296 @@
+okay
+
+some kind of map to objects for decoding? sure
+* other stuff
+uhh okay I need to investigate these things that are needeed on the message
+
+and write it in some, changes doc... loll.....
+* ids in new order
+- MessageHeaderInCompT MessageHeaderIn;
+standard
+- RequestHeaderCompT RequestHeader;
+standard
+- int64_t SecurityID;
+standard unique id, straightforward for equities (more complex for derivatives)
+- int64_t Price;
+standard
+- int64_t OrderQty;
+standard
+- uint64_t ClOrdID;
+standard
+- uint64_t PartyIDClientID;
+should be empty because we'll be prop trading
+- uint64_t PartyIdInvestmentDecisionMaker;
+an id for a human or tactic sending an order - exactly like CME
+- uint64_t ExecutingTrader;
+same as PartyIdInvestmentDecisionMaker for us (since the trade desk does their own trading)
+- uint32_t MatchInstCrossID;
+standard SMP id
+- uint16_t EnrichmentRuleID;
+irrelevant, only for derivatives trading
+- uint8_t Side;
+standard
+- uint8_t ApplSeqIndicator;
+standard (always 1)
+- uint8_t PriceValidityCheckType;
+will set at first, if we get bad rejects we'll turn it off
+- uint8_t ValueCheckTypeValue;
+up to tactic owners whether we set it
+- uint8_t ValueCheckTypeQuantity;
+up to tactic owners whether we set it
+- uint8_t OrderAttributeLiquidityProvision;
+standard, false
+- uint8_t TimeInForce;
+standard
+- uint8_t ExecInst;
+standard
+- uint8_t TradingCapacity;
+standard, proprietary
+- uint8_t OrderOrigination;
+standard, MPID-equivalent (for us)
+- uint8_t PartyIdInvestmentDecisionMakerQualifier;
+set to either "algo" or "human"
+- uint8_t ExecutingTraderQualifier;
+set to either "algo" or "human"
+* security ids
+reference data file from T7 RDF "Reference Data File", documented in
+https://www.eurex.com/resource/blob/2683890/384f6ae4d648337903779f6cd9a1480b/data/T7_EMDI_MDI_RDI_Manual_v.9.1.2.pdf
+* party identification
+* recovery
+okay there's some weird stuff about broadcast and retransmission from different services,
+but it can all be ignored:
+we just want to send retransmits to the session ApplID,
+using Retransmit (Order/Quote Event)
+
+and the seqnum there is ApplMsgId.
+
+okay so...
+I guess I can just keep requesting retransmits until I stop getting stuff.
+
+sure.
+* rsyscall
+okaaaay so I need to get this ussaabblee
+
+so I'm fine with building each time...
+
+and... I guess I'm fine with IFD....
+
+oh hm actually...
+maybe this current structure with a package.nix is fine.
+
+ummm okay let's see...
+
+well what I could do for now is just import through the filesystem...
+and make more progress later.
+
+no wait uh.
+i need compatible.... thingies...
+compatible nixpkgs versions. hm.
+
+okay fine. maybe I'll make a release then.
+
+okay yeah let's just make a release,
+we can pull down the branch while it's waiting to be merged,
+and all good.
+** release
+hmmmmmmmmm
+
+why is it not being able to import rsyscall._raw?
+
+
+for x in ["a", "b", "c"]:
+  do(x)
+
+do("a")
+do("b")
+do("c")
+** aaaaa
+okay
+I bet the reason for the nixdeps trouble is...
+
+with setup.py develop I can't have nixdeps in the same package as rsyscall,
+because it's only after nixdeps is installed that the entry point is usable
+
+yes, that's exactly right.
+
+okaaaaaaaaaaaay.
+so.
+
+I guess what I can pretty easily do is publish nixdeps to pip and package it up...
+
+or, I guess, I also could just give nixdeps its own setup.py while getting it from the same repo...
+
+okay, so...
+
+what I can do is... make a nixdeps directory.. and put a setup.py in it...
+and have it be a separate python package, installed with nix
+
+wait okay... this is probably why pytest is breaking too.
+okay so... I'll put it in a separate package somehow.
+
+if I can keep it in the same repo that would be nice...
+I could put it at the toplevel of the rsyscall repo as a sibling to c/ and python/...
+
+or if there's a way to support multiple packages with a single setup.py that would work too.
+
+question for #python:
+is there a nice way to support multiple packages (e.g. independently installable and publishable to pypi)
+with a single setup.py?
+(or, more specifically, in a subdirectory of a directory that already has a setup.py in it? e.g. a/setup.py, a/b/setup.py)
+
+okay fixed
+** now we're back to No module named 'rsyscall._raw'
+why dis
+
+ugh no that's not right, we're actually back to no nixdeps too.
+what did we do before...?
+
+why was it building the ._raw file before but not now?
+
+i have the old source code, so I can diff it...
+
+oh.
+
+maybe we were never building it.
+we just were copying it in as source.
+
+YEP
+that's the case
+
+okaaaaaay so the only reason setuptools works is because it just rebuilds everything.
+
+so... we want to run on the installed copy....
+
+okay so just a cd $out seemed to fix that. bizarre that I had to do that...
+** nixdeps
+is still wrong in how it's parsing the exported closures.
+** boom BOOM
+okay FINALLY, building right.
+
+now let's... push nixdeps to pypi...
+
+and then submit packages for nixdeps and rsyscall to Nixpkgs (in one PR)
+** packaged
+great great
+now we can pull that down in our pinning.
+* basic test
+complete!
+* remaining
+** TODO order state management
+okay...
+
+so there are a couple options here...
+
+obviously I want to be monitoring the order in the background...
+and accumulating state...
+
+maybe I should have some ClOrdId queue?
+like allocate the ClOrdId, then that's the queue...
+
+I need new ones for new cancels anyway
+
+okay sure but of course trio is too good to have a normal queue, lol
+
+persistent... queue...
+
+i guess we need an index in the queue.
+
+nice, implemented.
+*** nursery stuff
+okaaaay
+
+so I'd like to be able to just use a nursery started with the object...
+
+but that's tricky with _run...
+
+I guess start_nested_nursery would work fine...
+
+well, let's see. what do I actually want to do here?
+
+I don't actually need a trio task here.
+I could use dneio...
+
+hey yeah, I could actually just start the Order monitors with reset.
+
+ha HA that would be good.
+
+actually, could we rip out trio entirely?
+just use dneio?
+
+does dneio work fine with AsyncFD? I guess it does because I use it in the syscall interface...
+hm that would be really nice and fun...
+
+yeah let's just do it!
+
+nice
+*** 
+
+** TODO fills
+okay, fills!
+
+wait no sigh immediately responding is wrong;
+we need to be able to decide whether we want to execute the order or not...
+maybe sending in an order shouldn't block for a response?
+but... invalidly formatted ones...
+i'd want to block for at least one message just so I either get a reject or an accept...
+the accept might be a fill, but that's not a big deal...
+the background... running... the thing...
+blah hm.
+well. actually I guess book orders vs IOCs have different models.
+
+book orders, you're making an entry in the book and will get filled later
+IOCs, you expect an immediate result
+
+maybe we should have a hook which tells us whether there's an immediate fill?
+
+both order types can immediately fill so we can't just have different behavior for each...
+
+okay yeah, we can just treat rejects as unsolicited cancels,
+rather than throwing.
+
+okay, fine, fine
+
+*** DONE PARSING
+argh!
+okay!
+
+the NoFills field tells me how many fills I'm going to get!
+annoying! but, this might be okay!
+I can copy the data in... to a newly allocated OrderExecNotification stuct...
+
+so, the issue is just that I need to... read exactly the amount of data that I have in the message...
+then copy that into the struct...
+
+okay, and fine, I guess I can do that by just a read_length
+
+so that should be fine - we'll just have a forcible copying kind of thing
+
+ha and cffi lets me just cast arbitrary data, lol.
+
+okay seems good...
+*** DONE serializing
+also, I guess we want to send a limited number of fills *out*
+
+so how to do that?
+
+oh let's just punt on it for now
+
+we'll fix the parsing but not the serializing, we'll just have the right number of fills
+
+aiieee
+
+derivatives OrderExecNotifications are even more complicated! what a problem!
+
+okay so... these C headers are useless!
+
+we can't parse this...
+
+well, actually... if we don't have leg executions, then we're fine.
+
+okay, cool. all the variable length fields I care about are the first one in the message.
+and I never care about more than one variable length field.
+lol...
+
+so, this is fine for now
+** TODO cancels
+** TODO recovery
