@@ -4,7 +4,7 @@ from rsyscall.stdlib import mkdtemp
 from rsyscall.sys.socket import AF, SOCK
 from rsyscall.sys.un import SockaddrUn
 from order_entry_servers.eurex.server import Server
-from order_entry_servers.eurex.client import Client
+from order_entry_servers.eurex.client import Client, OrderCanceled, OrderFilled
 from order_entry_servers.eurex.protocol import *
 
 class Test(TrioTestCase):
@@ -25,8 +25,26 @@ class Test(TrioTestCase):
         self.client = await Client.connect(self.nursery, connected, [User(123, b"pass")])
 
     async def test_main(self) -> None:
-        order = await self.client.send_order(Decimal('50.0'), 100, Side.Buy, TimeInForce.Day)
+        order = await self.client.send_order(Decimal('50.1'), 100, Side.Buy, TimeInForce.Day)
         server_order = await self.server.orders.get()
-        await server_order.fill(order.price, order.quantity)
-        print(ps(await order.fills.get()))
+        await server_order.accept(canceled=True)
+        with self.assertRaises(OrderCanceled):
+            await order.fills.get()
+
+        order = await self.client.send_order(Decimal('50.1'), 100, Side.Buy, TimeInForce.Day)
+        server_order = await self.server.orders.get()
+        await server_order.accept_fill(order.price, order.quantity)
+        fill = await order.fills.get()
+        self.assertEqual((fill.price, fill.quantity), (order.price, order.quantity))
+        with self.assertRaises(OrderFilled):
+            print(await order.fills.get())
+
+        order = await self.client.send_order(Decimal('50.1'), 100, Side.Buy, TimeInForce.Day)
+        server_order = await self.server.orders.get()
+        await server_order.accept()
+        await server_order.fill(order.price, order.quantity//2)
+        await server_order.unsolicited_cancel()
+        fill = await order.fills.get()
+        with self.assertRaises(OrderCanceled):
+            print(await order.fills.get())
 

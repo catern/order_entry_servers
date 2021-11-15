@@ -6,11 +6,26 @@ from rsyscall import AsyncFileDescriptor
 from rsyscall.epoller import AsyncReadBuffer
 
 @dataclasses.dataclass
+class Fill:
+    price: Decimal
+    quantity: int
+    msg: ffi.CData
+
+class OrderDead(Exception):
+    pass
+
+class OrderCanceled(OrderDead):
+    pass
+
+class OrderFilled(OrderDead):
+    pass
+
+@dataclasses.dataclass
 class Order:
     client: Client
     cl_ord_id: ClOrdID
     new_order_single: ffi.CData
-    fills: PersistentQueue[ffi.CData]
+    fills: PersistentQueue[Fill]
 
     def __post_init__(self) -> None:
         dneio.reset(self._run())
@@ -25,9 +40,25 @@ class Order:
 
     async def _run(self) -> None:
         while True:
-            response = await self.cl_ord_id.queue.get()
-            if ffi.typeof(response) == ffi.typeof('OrderExecNotificationT'):
-                self.fills.put(response)
+            msg = await self.cl_ord_id.queue.get()
+            type = ffi.typeof(msg).cname
+            if hasattr(msg, 'FillsGrp'):
+                for i in range(msg.NoFills):
+                    fill = msg.FillsGrp[i]
+                    self.fills.put(Fill(price_to_decimal(fill.FillPx), fill.FillQty, msg))
+            if hasattr(msg, 'OrdStatus'):
+                status = b''.join(msg.OrdStatus)
+                if status == get_enum_bytes('OrdStatus', 'Canceled'):
+                    self.fills.close(OrderCanceled())
+                elif status == get_enum_bytes('OrdStatus', 'Filled'):
+                    self.fills.close(OrderFilled())
+                elif status in [get_enum_bytes('OrdStatus', 'New'), get_enum_bytes('OrdStatus', 'PartiallyFilled')]:
+                    pass
+                else:
+                    raise Exception(self, "got unhandled OrdStatus", status)
+            if type in ['OrderExecNotificationT', 'OrderExecResponseT', 'NewOrderResponseT', 'DeleteOrderBroadcastT']:
+                # handled entirely by the introspection
+                pass
             else:
                 raise Exception(self, "got unhandled", msg, ps(msg))
 

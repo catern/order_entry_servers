@@ -6,27 +6,68 @@ from rsyscall.epoller import AsyncReadBuffer
 from order_entry_servers.eurex.protocol import *
 
 @dataclasses.dataclass
+class Fill:
+    price: Decimal
+    quantity: int
+
+    def render(self) -> Dict[str, int]:
+        return {'FillPx': decimal_to_price(self.price), 'FillQty': self.quantity}
+
+@dataclasses.dataclass
 class ServerOrder:
     connection: Connection
     cl_ord_id: ClOrdID
     new_order_single: ffi.CData
+    fills: List[Fill]
 
-    async def accept(self) -> None:
+    async def accept(self, canceled: bool=False) -> None:
         await self.connection.send('NewOrderResponseT', {
             'ResponseHeaderME': {
             },
+            'ClOrdID': self.cl_ord_id.number,
+            'OrdStatus': get_enum_bytes("OrdStatus", "Canceled" if canceled else "New"),
         })
 
+    async def unsolicited_cancel(self) -> None:
+        await self.connection.send('DeleteOrderBroadcastT', {
+            'RBCHeaderME': {
+            },
+            'ClOrdID': self.cl_ord_id.number,
+            'OrigClOrdID': self.cl_ord_id.number,
+            'OrdStatus': get_enum_bytes("OrdStatus", "Canceled"),
+        })
+
+    def fill_status(self) -> str:
+        filled = sum(fill.quantity for fill in self.fills)
+        if filled == 0:
+            return "New"
+        elif filled < self.new_order_single.OrderQty:
+            return "PartiallyFilled"
+        else:
+            return "Filled"
+
     async def accept_fill(self, price: Decimal, quantity: int) -> None:
+        fills = [Fill(price, quantity)]
+        self.fills.extend(fills)
         await self.connection.send('OrderExecResponseT', {
+            'ClOrdID': self.cl_ord_id.number,
+            'OrigClOrdID': self.cl_ord_id.number,
+            'OrdStatus': get_enum_bytes("OrdStatus", self.fill_status()),
+            'NoFills': len(fills),
+            'FillsGrp': [fill.render() for fill in fills],
         })
 
     async def fill(self, price: Decimal, quantity: int) -> None:
+        fills = [Fill(price, quantity)]
+        self.fills.extend(fills)
         await self.connection.send('OrderExecNotificationT', {
             'RBCHeaderME': {
             },
             'ClOrdID': self.cl_ord_id.number,
             'OrigClOrdID': self.cl_ord_id.number,
+            'OrdStatus': get_enum_bytes("OrdStatus", self.fill_status()),
+            'NoFills': len(fills),
+            'FillsGrp': [fill.render() for fill in fills],
         })
 
 @dataclasses.dataclass
@@ -75,7 +116,7 @@ class Connection:
                     await self.send('UserLoginResponseT', {})
                 elif type == ffi.typeof('NewOrderSingleShortRequestT'):
                     cl_ord_id = self.server._add_cl_ord_id(msg.ClOrdID)
-                    self.server.orders.put(ServerOrder(self, cl_ord_id, msg))
+                    self.server.orders.put(ServerOrder(self, cl_ord_id, msg, fills=[]))
                 else:
                     raise Exception("got unhandled", msg, ps(msg))
 

@@ -12,16 +12,25 @@ T = TypeVar('T')
 class PersistentQueue(Generic[T]):
     data: List[T] = dataclasses.field(default_factory=list)
     idx: int = 0
+    exc: Optional[Exception] = None
     _waiting_cbs: t.List[dneio.Continuation[None]] = dataclasses.field(default_factory=list)
 
     async def get(self) -> T:
-        while self.idx >= len(self.data):
+        while self.idx >= len(self.data) and not self.exc:
             await dneio.shift(self._waiting_cbs.append)
+        if self.idx >= len(self.data):
+            raise self.exc
         self.idx += 1
         return self.data[self.idx-1]
 
     def put(self, val: T) -> None:
         self.data.append(val)
+        waiting, self._waiting_cbs = self._waiting_cbs, []
+        for cb in waiting:
+            cb.send(None)
+
+    def close(self, exc: Exception) -> None:
+        self.exc = exc
         waiting, self._waiting_cbs = self._waiting_cbs, []
         for cb in waiting:
             cb.send(None)
