@@ -93,6 +93,7 @@ class Client:
     users: List[User]
     cl_ord_ids: Dict[int, ClOrdID]
     seq_num: int = 1
+    last_appl_msg_id: bytes = b""
 
     async def send(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
         seq_num = self.seq_num
@@ -104,11 +105,23 @@ class Client:
         await self.buf.fd.write_all_bytes(bytes(ffi.buffer(msg)))
         return msg
 
+    def _got_appl_msg_header(self, hdr: ffi.CData) -> None:
+        appl_msg_id = b"".join(hdr.ApplMsgID)
+        assert self.last_appl_msg_id < appl_msg_id, (
+            f"{self.last_appl_msg_id} >= {appl_msg_id}")
+        # we're not subscribing to any other streams
+        assert hdr.ApplID == get_enum("APPLID", "SessionData")
+        self.last_appl_msg_id = appl_msg_id
+
     async def recv(self, msg_type: str=None) -> ffi.CData:
         header = await self.buf.read_cffi('MessageHeaderOutCompT', remove=False)
         msg = copy_cast(tid_to_type[header.TemplateID], await self.buf.read_length(header.BodyLen))
         if msg_type:
             assert ffi.typeof(msg) == ffi.typeof(msg_type)
+        if hasattr(msg, 'RBCHeaderME'):
+            self._got_appl_msg_header(msg.RBCHeaderME)
+        elif hasattr(msg, 'ResponseHeaderME'):
+            self._got_appl_msg_header(msg.ResponseHeaderME)
         return msg
 
     @classmethod

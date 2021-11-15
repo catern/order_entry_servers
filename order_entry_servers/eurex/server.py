@@ -28,7 +28,7 @@ class ServerOrder:
             msg = await self.cl_ord_id.queue.get()
             type = ffi.typeof(msg).cname
             if type in ['DeleteOrderSingleRequestT']:
-                await self.connection.send('DeleteOrderResponseT', {
+                await self.connection.send_reply('DeleteOrderResponseT', {
                     'ResponseHeaderME': {
                     },
                     'ClOrdID': msg.ClOrdID,
@@ -40,17 +40,13 @@ class ServerOrder:
                 raise Exception(self, "got unhandled", msg, ps(msg))
 
     async def accept(self, canceled: bool=False) -> None:
-        await self.connection.send('NewOrderResponseT', {
-            'ResponseHeaderME': {
-            },
+        await self.connection.send_reply('NewOrderResponseT', {
             'ClOrdID': self.cl_ord_id.number,
             'OrdStatus': get_enum_bytes("OrdStatus", "Canceled" if canceled else "New"),
         })
 
     async def unsolicited_cancel(self) -> None:
-        await self.connection.send('DeleteOrderBroadcastT', {
-            'RBCHeaderME': {
-            },
+        await self.connection.send_notification('DeleteOrderBroadcastT', {
             'ClOrdID': self.cl_ord_id.number,
             'OrigClOrdID': self.cl_ord_id.number,
             'OrdStatus': get_enum_bytes("OrdStatus", "Canceled"),
@@ -68,7 +64,7 @@ class ServerOrder:
     async def accept_fill(self, price: Decimal, quantity: int) -> None:
         fills = [Fill(price, quantity)]
         self.fills.extend(fills)
-        await self.connection.send('OrderExecResponseT', {
+        await self.connection.send_reply('OrderExecResponseT', {
             'ClOrdID': self.cl_ord_id.number,
             'OrigClOrdID': self.cl_ord_id.number,
             'OrdStatus': get_enum_bytes("OrdStatus", self.fill_status()),
@@ -79,9 +75,7 @@ class ServerOrder:
     async def fill(self, price: Decimal, quantity: int) -> None:
         fills = [Fill(price, quantity)]
         self.fills.extend(fills)
-        await self.connection.send('OrderExecNotificationT', {
-            'RBCHeaderME': {
-            },
+        await self.connection.send_notification('OrderExecNotificationT', {
             'ClOrdID': self.cl_ord_id.number,
             'OrigClOrdID': self.cl_ord_id.number,
             'OrdStatus': get_enum_bytes("OrdStatus", self.fill_status()),
@@ -96,10 +90,39 @@ class Connection:
     buf: AsyncReadBuffer
     next_seq_num: int = 1
 
-    async def send(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
-        msg = to_out_struct(msg_type, fields)
+    async def _send_msg(self, msg: ffi.CData) -> ffi.CData:
         await self.buf.fd.write_all_bytes(bytes(ffi.buffer(msg)))
         return msg
+
+    async def send(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
+        msg = to_out_struct(msg_type, fields)
+        return await self._send_msg(msg)
+
+    async def send_reply(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
+        msg = to_out_struct(msg_type, {
+            **fields,
+            'ResponseHeaderME': {
+                'RequestTime': time.time_ns(),
+                'SendingTime': time.time_ns(),
+                'ApplID': get_enum("APPLID", "SessionData"),
+                'ApplMsgID': str(len(self.server.appl_msgs * 3)).encode().rjust(16, b" "),
+            }
+        })
+        self.server.appl_msgs.append(msg)
+        return await self._send_msg(msg)
+
+    async def send_notification(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
+        msg = to_out_struct(msg_type, {
+            **fields,
+            # I don't know what RBC or ME stand for...
+            'RBCHeaderME': {
+                'SendingTime': time.time_ns(),
+                'ApplID': get_enum("APPLID", "SessionData"),
+                'ApplMsgID': str(len(self.server.appl_msgs * 3)).encode().rjust(16, b" "),
+            }
+        })
+        self.server.appl_msgs.append(msg)
+        return await self._send_msg(msg)
 
     async def recv(self, msg_type: str=None) -> ffi.CData:
         header = await self.buf.read_cffi('MessageHeaderInCompT', remove=False)
@@ -152,6 +175,7 @@ class Server:
     listening: AsyncFileDescriptor
     cl_ord_ids: Dict[int, ClOrdID]
     orders: PersistentQueue[ServerOrder]
+    appl_msgs: List[ffi.CData]
 
     @classmethod
     async def start(cls, nursery: trio.Nursery, listening: AsyncFileDescriptor) -> Server:
@@ -159,6 +183,7 @@ class Server:
             listening,
             {},
             PersistentQueue(),
+            [],
         )
         nursery.start_soon(self._run)
         return self
