@@ -94,6 +94,7 @@ class ServerOrder:
 class Connection:
     server: Server
     buf: AsyncReadBuffer
+    next_seq_num: int = 1
 
     async def send(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
         msg = to_out_struct(msg_type, fields)
@@ -105,6 +106,9 @@ class Connection:
         msg = copy_cast(tid_to_type[header.TemplateID], await self.buf.read_length(header.BodyLen))
         if msg_type:
             assert ffi.typeof(msg) == ffi.typeof(msg_type)
+        assert self.next_seq_num == msg.RequestHeader.MsgSeqNum, (
+            f"{self.next_seq_num} != {msg.RequestHeader.MsgSeqNum}")
+        self.next_seq_num += 1
         return msg
 
     @classmethod
