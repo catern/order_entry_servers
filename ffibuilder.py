@@ -24,7 +24,7 @@ def define_to_dots(line: str) -> str:
     line = re.sub(array_pattern, r'[...]', line)
     return line
 
-file = "".join([define_to_dots(line) for line in open("ETILayoutsNS_Cash.h", "r")])
+file = "".join([define_to_dots(line) for line in open("ETILayoutsNS_Derivatives.h", "r")])
 ffibuilder.cdef(file)
 
 # for line in open("ETILayoutsNS_Cash.h", "r"):
