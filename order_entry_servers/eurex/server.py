@@ -28,7 +28,7 @@ class ServerOrder:
             msg = await self.cl_ord_id.queue.get()
             type = ffi.typeof(msg).cname
             if type in ['DeleteOrderSingleRequestT']:
-                await self.connection.send_reply('DeleteOrderResponseT', {
+                await self.connection.send_application_response('DeleteOrderResponseT', {
                     'ResponseHeaderME': {
                     },
                     'ClOrdID': msg.ClOrdID,
@@ -40,13 +40,13 @@ class ServerOrder:
                 raise Exception(self, "got unhandled", msg, ps(msg))
 
     async def accept(self, canceled: bool=False) -> None:
-        await self.connection.send_reply('NewOrderResponseT', {
+        await self.connection.send_application_response('NewOrderResponseT', {
             'ClOrdID': self.cl_ord_id.number,
             'OrdStatus': get_enum_bytes("OrdStatus", "Canceled" if canceled else "New"),
         })
 
     async def unsolicited_cancel(self) -> None:
-        await self.connection.send_notification('DeleteOrderBroadcastT', {
+        await self.connection.send_application_notification('DeleteOrderBroadcastT', {
             'ClOrdID': self.cl_ord_id.number,
             'OrigClOrdID': self.cl_ord_id.number,
             'OrdStatus': get_enum_bytes("OrdStatus", "Canceled"),
@@ -64,7 +64,7 @@ class ServerOrder:
     async def accept_fill(self, price: Decimal, quantity: int) -> None:
         fills = [Fill(price, quantity)]
         self.fills.extend(fills)
-        await self.connection.send_reply('OrderExecResponseT', {
+        await self.connection.send_application_response('OrderExecResponseT', {
             'ClOrdID': self.cl_ord_id.number,
             'OrigClOrdID': self.cl_ord_id.number,
             'OrdStatus': get_enum_bytes("OrdStatus", self.fill_status()),
@@ -75,7 +75,7 @@ class ServerOrder:
     async def fill(self, price: Decimal, quantity: int) -> None:
         fills = [Fill(price, quantity)]
         self.fills.extend(fills)
-        await self.connection.send_notification('OrderExecNotificationT', {
+        await self.connection.send_application_notification('OrderExecNotificationT', {
             'ClOrdID': self.cl_ord_id.number,
             'OrigClOrdID': self.cl_ord_id.number,
             'OrdStatus': get_enum_bytes("OrdStatus", self.fill_status()),
@@ -94,11 +94,17 @@ class Connection:
         await self.buf.fd.write_all_bytes(bytes(ffi.buffer(msg)))
         return msg
 
-    async def send(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
-        msg = to_out_struct(msg_type, fields)
+    async def send_session_response(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
+        msg = to_out_struct(msg_type, {
+            **fields,
+            'ResponseHeader': {
+                'RequestTime': time.time_ns(),
+                'SendingTime': time.time_ns(),
+            },
+        })
         return await self._send_msg(msg)
 
-    async def send_reply(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
+    async def send_application_response(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
         msg = to_out_struct(msg_type, {
             **fields,
             'ResponseHeaderME': {
@@ -111,10 +117,10 @@ class Connection:
         self.server.appl_msgs.append(msg)
         return await self._send_msg(msg)
 
-    async def send_notification(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
+    async def send_application_notification(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
         msg = to_out_struct(msg_type, {
             **fields,
-            # I don't know what RBC or ME stand for...
+            # TODO I don't know what RBC or ME stand for...
             'RBCHeaderME': {
                 'SendingTime': time.time_ns(),
                 'ApplID': get_enum("APPLID", "SessionData"),
@@ -141,7 +147,7 @@ class Connection:
             AsyncReadBuffer(sock, parsing_ffi=ffi),
         )
         logon = await self.recv('LogonRequestT')
-        logon_response = await self.send('LogonResponseT', {
+        logon_response = await self.send_session_response('LogonResponseT', {
             'ThrottleTimeInterval': 5000,
             'ThrottleNoMsgs': 5000,
             'ThrottleDisconnectLimit': 0,
@@ -158,15 +164,34 @@ class Connection:
         async with trio.open_nursery() as nursery:
             while True:
                 msg = await self.recv()
-                type = ffi.typeof(msg)
-                if type == ffi.typeof('UserLoginRequestT'):
-                    await self.send('UserLoginResponseT', {})
-                elif type == ffi.typeof('NewOrderSingleShortRequestT'):
+                type = ffi.typeof(msg).cname
+                if type == 'UserLoginRequestT':
+                    await self.send_session_response('UserLoginResponseT', {})
+                elif type == 'NewOrderSingleShortRequestT':
                     cl_ord_id = self.server._add_cl_ord_id(msg.ClOrdID)
                     self.server.orders.put(ServerOrder(self, cl_ord_id, msg, fills=[]))
-                elif type == ffi.typeof('DeleteOrderSingleRequestT'):
+                elif type == 'DeleteOrderSingleRequestT':
                     self.server.cl_ord_ids[msg.OrigClOrdID].queue.put(msg)
                     self.server.orders.put(ServerOrder(self, cl_ord_id, msg, fills=[]))
+                elif type == "RetransmitMEMessageRequestT":
+                    for start_idx, appl_msg in enumerate(self.server.appl_msgs):
+                        header = extract_appl_header(appl_msg)
+                        assert header is not None
+                        if header.ApplMsgID >= msg.ApplBegMsgID:
+                            break
+                    else:
+                        # nothing to retransmit!
+                        start_idx = len(self.server.appl_msgs)
+                    to_retransmit = self.server.appl_msgs[start_idx:start_idx+100]
+                    end = extract_appl_header(to_retransmit[-1]).ApplMsgID if to_retransmit else b"\0"*16
+                    last = extract_appl_header(self.server.appl_msgs[-1]).ApplMsgID if self.server.appl_msgs else b"\0"*16
+                    await self.send_session_response('RetransmitMEMessageResponseT', {
+                        'ApplTotalMessageCount': len(to_retransmit),
+                        'ApplEndMsgID': end,
+                        'RefApplLastMsgID': last,
+                    })
+                    for appl_msg in to_retransmit:
+                        await self._send_msg(appl_msg)
                 else:
                     raise Exception("got unhandled", msg, ps(msg))
 

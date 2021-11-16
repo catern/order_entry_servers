@@ -93,7 +93,7 @@ class Client:
     users: List[User]
     cl_ord_ids: Dict[int, ClOrdID]
     seq_num: int = 1
-    last_appl_msg_id: bytes = b""
+    last_appl_msg_id: bytes = b"\0"*16
 
     async def send(self, msg_type: str, fields: Dict[str, Any]) -> ffi.CData:
         seq_num = self.seq_num
@@ -118,10 +118,9 @@ class Client:
         msg = copy_cast(tid_to_type[header.TemplateID], await self.buf.read_length(header.BodyLen))
         if msg_type:
             assert ffi.typeof(msg) == ffi.typeof(msg_type)
-        if hasattr(msg, 'RBCHeaderME'):
-            self._got_appl_msg_header(msg.RBCHeaderME)
-        elif hasattr(msg, 'ResponseHeaderME'):
-            self._got_appl_msg_header(msg.ResponseHeaderME)
+        appl_header = extract_appl_header(msg)
+        if appl_header:
+            self._got_appl_msg_header(appl_header)
         return msg
 
     @classmethod
@@ -155,7 +154,21 @@ class Client:
             })
             user_login_response = await self.recv('UserLoginResponseT')
             print(user_login_response, ps(user_login_response))
-        # TODO now ask for retransmits of... everything
+        # ask for retransmits until there's nothing left to retransmit
+        while True:
+            await self.send('RetransmitMEMessageRequestT', {
+                'RefApplID': get_enum("APPLID", "SessionData"),
+                'ApplBegMsgID': self.last_appl_msg_id,
+                'ApplEndMsgID': b'\xff'*16,
+            })
+            retransmit_response = await self.recv("RetransmitMEMessageResponseT")
+            if retransmit_response.ApplTotalMessageCount == 0:
+                break
+            for _ in range(retransmit_response.ApplTotalMessageCount):
+                msg = await self.recv()
+                # it was a sequenced message
+                assert extract_appl_header(msg)
+                # TODO do something with it... like log state...
         nursery.start_soon(self._run)
         return self
 

@@ -42,7 +42,7 @@ class Test(TrioTestCase):
         fill = await order.fills.get()
         self.assertEqual((fill.price, fill.quantity), (order.price, order.quantity))
         with self.assertRaises(OrderFilled):
-            print(await order.fills.get())
+            await order.fills.get()
 
         logger.info("Fill and unsolicited cancel")
         order = await self.client.send_order(Decimal('50.1'), 100, Side.Buy, TimeInForce.Day)
@@ -52,7 +52,7 @@ class Test(TrioTestCase):
         await server_order.unsolicited_cancel()
         fill = await order.fills.get()
         with self.assertRaises(OrderCanceled):
-            print(await order.fills.get())
+            await order.fills.get()
 
         logger.info("Solicited cancel")
         order = await self.client.send_order(Decimal('50.1'), 100, Side.Buy, TimeInForce.Day)
@@ -60,4 +60,4 @@ class Test(TrioTestCase):
         await server_order.accept()
         await order.cancel()
         with self.assertRaises(OrderCanceled):
-            print(await order.fills.get())
+            await order.fills.get()

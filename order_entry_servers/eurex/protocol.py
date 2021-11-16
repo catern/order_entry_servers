@@ -39,6 +39,14 @@ class PersistentQueue(Generic[T]):
 class ClOrdID:
     number: int
     queue: PersistentQueue[ffi.CData] = dataclasses.field(default_factory=PersistentQueue)
+
+def extract_appl_header(msg: ffi.CData) -> Optional[ffi.CData]:
+    if hasattr(msg, 'RBCHeaderME'):
+        return msg.RBCHeaderME
+    elif hasattr(msg, 'ResponseHeaderME'):
+        return msg.ResponseHeaderME
+    else:
+        return None
         
 def copy_cast(type: str, data: bytes) -> ffi.CData:
     # ffi.cast drops the reference to the backing buffer, so we have to allocate some space and copy into there
