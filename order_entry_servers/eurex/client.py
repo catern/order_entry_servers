@@ -4,6 +4,7 @@ import time
 from order_entry_servers.eurex.protocol import *
 from rsyscall import AsyncFileDescriptor
 from rsyscall.epoller import AsyncReadBuffer
+from rsyscall.sys.socket import SHUT
 
 @dataclasses.dataclass
 class Fill:
@@ -174,7 +175,10 @@ class Client:
 
     async def _run(self) -> None:
         while True:
-            msg = await self.recv()
+            try:
+                msg = await self.recv()
+            except EOFError:
+                break
             if hasattr(msg, 'ClOrdID'):
                 self.cl_ord_ids[msg.ClOrdID].queue.put(msg)
             else:
@@ -210,3 +214,6 @@ class Client:
             PersistentQueue(),
         )
         return order
+
+    async def close(self) -> None:
+        await self.buf.fd.handle.shutdown(SHUT.RDWR)

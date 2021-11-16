@@ -14,9 +14,9 @@ class Test(TrioTestCase):
     async def asyncSetUp(self) -> None:
         self.thread = local_thread
         self.dir = await mkdtemp(self.thread)
-        addr = await self.thread.ptr(await SockaddrUn.from_path(self.thread, self.dir/"sock"))
+        self.addr = await self.thread.ptr(await SockaddrUn.from_path(self.thread, self.dir/"sock"))
         listening = await self.thread.make_afd(await self.thread.socket(AF.UNIX, SOCK.STREAM|SOCK.NONBLOCK))
-        await listening.bind(addr)
+        await listening.bind(self.addr)
         await listening.handle.listen(10)
         # TODO we should really be getting the address out... of the server?
         # and maybe we can make the listening socket inside there...
@@ -24,7 +24,7 @@ class Test(TrioTestCase):
         # although bind_getsockname is awkward with SockaddrUn
         self.server = await Server.start(self.nursery, listening)
         connected = await self.thread.make_afd(await self.thread.socket(AF.UNIX, SOCK.STREAM|SOCK.NONBLOCK))
-        await connected.connect(addr)
+        await connected.connect(self.addr)
         self.client = await Client.connect(self.nursery, connected, [User(123, b"pass")])
 
     async def test_main(self) -> None:
@@ -61,3 +61,9 @@ class Test(TrioTestCase):
         await order.cancel()
         with self.assertRaises(OrderCanceled):
             await order.fills.get()
+
+        logger.info("Log out, log in")
+        await self.client.close()
+        connected = await self.thread.make_afd(await self.thread.socket(AF.UNIX, SOCK.STREAM|SOCK.NONBLOCK))
+        await connected.connect(self.addr)
+        self.client = await Client.connect(self.nursery, connected, [User(123, b"pass")])

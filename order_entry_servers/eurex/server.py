@@ -161,39 +161,41 @@ class Connection:
         nursery.start_soon(self._run)
 
     async def _run(self) -> None:
-        async with trio.open_nursery() as nursery:
-            while True:
+        while True:
+            try:
                 msg = await self.recv()
-                type = ffi.typeof(msg).cname
-                if type == 'UserLoginRequestT':
-                    await self.send_session_response('UserLoginResponseT', {})
-                elif type == 'NewOrderSingleShortRequestT':
-                    cl_ord_id = self.server._add_cl_ord_id(msg.ClOrdID)
-                    self.server.orders.put(ServerOrder(self, cl_ord_id, msg, fills=[]))
-                elif type == 'DeleteOrderSingleRequestT':
-                    self.server.cl_ord_ids[msg.OrigClOrdID].queue.put(msg)
-                    self.server.orders.put(ServerOrder(self, cl_ord_id, msg, fills=[]))
-                elif type == "RetransmitMEMessageRequestT":
-                    for start_idx, appl_msg in enumerate(self.server.appl_msgs):
-                        header = extract_appl_header(appl_msg)
-                        assert header is not None
-                        if header.ApplMsgID >= msg.ApplBegMsgID:
-                            break
-                    else:
-                        # nothing to retransmit!
-                        start_idx = len(self.server.appl_msgs)
-                    to_retransmit = self.server.appl_msgs[start_idx:start_idx+100]
-                    end = extract_appl_header(to_retransmit[-1]).ApplMsgID if to_retransmit else b"\0"*16
-                    last = extract_appl_header(self.server.appl_msgs[-1]).ApplMsgID if self.server.appl_msgs else b"\0"*16
-                    await self.send_session_response('RetransmitMEMessageResponseT', {
-                        'ApplTotalMessageCount': len(to_retransmit),
-                        'ApplEndMsgID': end,
-                        'RefApplLastMsgID': last,
-                    })
-                    for appl_msg in to_retransmit:
-                        await self._send_msg(appl_msg)
+            except EOFError:
+                break
+            type = ffi.typeof(msg).cname
+            if type == 'UserLoginRequestT':
+                await self.send_session_response('UserLoginResponseT', {})
+            elif type == 'NewOrderSingleShortRequestT':
+                cl_ord_id = self.server._add_cl_ord_id(msg.ClOrdID)
+                self.server.orders.put(ServerOrder(self, cl_ord_id, msg, fills=[]))
+            elif type == 'DeleteOrderSingleRequestT':
+                self.server.cl_ord_ids[msg.OrigClOrdID].queue.put(msg)
+                self.server.orders.put(ServerOrder(self, cl_ord_id, msg, fills=[]))
+            elif type == "RetransmitMEMessageRequestT":
+                for start_idx, appl_msg in enumerate(self.server.appl_msgs):
+                    header = extract_appl_header(appl_msg)
+                    assert header is not None
+                    if header.ApplMsgID >= msg.ApplBegMsgID:
+                        break
                 else:
-                    raise Exception("got unhandled", msg, ps(msg))
+                    # nothing to retransmit!
+                    start_idx = len(self.server.appl_msgs)
+                to_retransmit = self.server.appl_msgs[start_idx:start_idx+100]
+                end = extract_appl_header(to_retransmit[-1]).ApplMsgID if to_retransmit else b"\0"*16
+                last = extract_appl_header(self.server.appl_msgs[-1]).ApplMsgID if self.server.appl_msgs else b"\0"*16
+                await self.send_session_response('RetransmitMEMessageResponseT', {
+                    'ApplTotalMessageCount': len(to_retransmit),
+                    'ApplEndMsgID': end,
+                    'RefApplLastMsgID': last,
+                })
+                for appl_msg in to_retransmit:
+                    await self._send_msg(appl_msg)
+            else:
+                raise Exception("got unhandled", msg, ps(msg))
 
 @dataclasses.dataclass
 class Server:
