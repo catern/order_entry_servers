@@ -5,6 +5,9 @@ from order_entry_servers.eurex.protocol import *
 from rsyscall import AsyncFileDescriptor
 from rsyscall.epoller import AsyncReadBuffer
 from rsyscall.sys.socket import SHUT
+import logging
+
+logger = logging.getLogger(__name__)
 
 @dataclasses.dataclass
 class Fill:
@@ -154,15 +157,18 @@ class Client:
                 'Password': user.password,
             })
             user_login_response = await self.recv('UserLoginResponseT')
-            print(user_login_response, ps(user_login_response))
         # ask for retransmits until there's nothing left to retransmit
         while True:
+            logger.info("Requesting retransmit starting at %s", self.last_appl_msg_id)
             await self.send('RetransmitMEMessageRequestT', {
                 'RefApplID': get_enum("APPLID", "SessionData"),
                 'ApplBegMsgID': self.last_appl_msg_id,
                 'ApplEndMsgID': b'\xff'*16,
             })
             retransmit_response = await self.recv("RetransmitMEMessageResponseT")
+            logger.info("Receiving retransmit of %d messages ending at %s",
+                        retransmit_response.ApplTotalMessageCount,
+                        b"".join(retransmit_response.ApplEndMsgID))
             if retransmit_response.ApplTotalMessageCount == 0:
                 break
             for _ in range(retransmit_response.ApplTotalMessageCount):

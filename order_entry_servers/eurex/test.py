@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 class Test(TrioTestCase):
     async def asyncSetUp(self) -> None:
+        logging.basicConfig(level=logging.INFO, force=True)
         self.thread = local_thread
         self.dir = await mkdtemp(self.thread)
         self.addr = await self.thread.ptr(await SockaddrUn.from_path(self.thread, self.dir/"sock"))

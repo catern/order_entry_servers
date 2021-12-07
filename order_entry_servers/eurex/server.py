@@ -4,6 +4,9 @@ import time
 from rsyscall.sys.socket import SOCK
 from rsyscall.epoller import AsyncReadBuffer
 from order_entry_servers.eurex.protocol import *
+import logging
+
+logger = logging.getLogger(__name__)
 
 @dataclasses.dataclass
 class Fill:
@@ -179,7 +182,8 @@ class Connection:
                 for start_idx, appl_msg in enumerate(self.server.appl_msgs):
                     header = extract_appl_header(appl_msg)
                     assert header is not None
-                    if header.ApplMsgID >= msg.ApplBegMsgID:
+                    if b"".join(header.ApplMsgID) > b"".join(msg.ApplBegMsgID):
+                        logger.info("Retransmitting starting with %s", b"".join(header.ApplMsgID))
                         break
                 else:
                     # nothing to retransmit!

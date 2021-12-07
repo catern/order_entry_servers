@@ -176,7 +176,7 @@ now we can pull that down in our pinning.
 * basic test
 complete!
 * remaining
-** TODO order state management
+** DONE order state management
 okay...
 
 so there are a couple options here...
@@ -225,7 +225,7 @@ yeah let's just do it!
 nice
 *** 
 
-** TODO fills
+** DONE fills
 okay, fills!
 
 wait no sigh immediately responding is wrong;
@@ -292,5 +292,165 @@ and I never care about more than one variable length field.
 lol...
 
 so, this is fine for now
-** TODO cancels
+** DONE unsolicited cancels
+so like rejects we should put an exception in the fill queue.
+
+cool, that works
+
+cool cool cool, good tests.
+
+now for recovery.
+** DONE rejects
+I guess I should have a reject throw an exception into the queue - because the order is cancelled...
+
+actually, maybe any kind of cancel should throw an exception into the fills queue...
+
+sure, makes sense; a cancel should mean no more fills.
+
+and it doesn't have to throw;
+I guess we... just...
+
+get fills until there's none left,
+and if there's an exception there,
+throw that instead of waiting.
+
+well... actually... we could...
+
+no no no no, that's too complex.
+throwing the exception directly into the waiters,
+will cause issues for sure.
+
+because... we might have two waiters and...
+
+oh well actually throwing it directly can't work anyway.
+because we don't want to..... um....
+break waiters which have yet to run but for whom there is still data available.
+
+well let's start with cancels
+** DONE solicited cancels
+okaaaaaaay
+
+so I guess we'll request the cancel and then...
+
+well, we can just wait on the fills queue until we get an OrderCanceled.
+
+that might be better than the cancel method waiting...
+
+yeah, seems good
+
+okay so... on the server side...
+
+I guess we get a stream of replaces, and then a cancel at the end? lol
+
+well no. we could get multiple cancel requests.
+
+I guess we get a stream of requests then react to them?
+
+well actually, cancels can be handled fully internally;
+let's just have it do that.
+
+yeah
+
+oh right. cancels have a new cl_ord_id
+
+okay let's actually just wait for the cancel to be acked
+** DONE check seqnums in the server
+** DONE check ApplSeqNums in the client
+oops, there's no such thing! ApplMsgId:
+
+"Gap detection is not possible."
+
+cool, cool...
+
+so we can't do this.
+fine by me!
+well - I guess I could check that they're ascending,
+and track the last one seen.
+
+yes, did that.
 ** TODO recovery
+lol recovery, recovery, recovery...
+
+okay so we need to learn the ApplMsgID...
+
+then request a retransmission...
+
+we'll have a seqnum from the venue, which is the ApplSeqNum,
+which is specific to an ApplMsgID...
+
+oh wait no
+
+we just need RefApplID...
+*** DONE ApplMsgId
+weird
+
+but... it is ascending?
+
+okay so... I guess...
+
+we store the last one we know...
+
+then we send retransmits until...
+we get a response with no data
+
+cool, we're doing that now
+*** DONE actually trigger a recovery
+okay... so...
+
+we need to drop our client then reconnect.
+
+I guess we'll... just wrap the whole thing in an exception handler...
+
+sure fine.
+
+(I'm thinking of someone enthusiastic about monadic IO,
+and a functional core design,
+where when you fail to write you just don't call back into the functional core.
+
+well... that's called an exception.)
+
+anyway, exception handler
+
+cool
+*** TODO actually recover some data
+hmmmm
+
+soooooooo
+
+I guess what I could do is...
+
+store the last applmsgid, sure...
+
+and also store the max clordid I sent...
+
+hmmm
+mmmm
+
+okay
+
+oh wait we don't even know whether a clordid is an order or not lol
+
+well I guess with bump we encode them separately... so we can do that here...
+
+okaaaaaaaaay....
+
+well basically we could... just...
+make the order from nothing? urgh.
+that's like synthesizeNewOrder, and not good.
+
+we could...
+** TODO security ids
+** TODO party identification
+and users and so on
+** other end of the queue
+hmm. I dont' really want a queue.
+
+I want a coroutine that I can send messages into.
+
+that way if it breaks, I'll know.
+
+well, more specifically, it's enforced that there's someone on the other end.
+
+ehhhhhh it's hard....
+
+well, it's a mattter of refcounting the receiver side, sigh, lol
