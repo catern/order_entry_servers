@@ -13,7 +13,9 @@ buildPythonPackage {
   ];
 
   propagatedBuildInputs = [
-    # rsyscall
-    (rsyscall.overrideAttrs (old: { src = /home/sbaugh/.local/src/rsyscall/python; }))
+    (rsyscall.overrideAttrs (old: { src = (builtins.fetchGit {
+      url = https://github.com/catern/rsyscall;
+      ref = "for_order_entry_servers";
+    }) + "/python"; }))
   ];
 }
