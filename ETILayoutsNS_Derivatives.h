@@ -2,11 +2,11 @@
  *
  *  FILE NAME: ETILayoutsNS_Derivatives.h
  *
- *  INTERFACE VERSION:   9.1
+ *  INTERFACE VERSION:   10.0
  *
  *  SUBVERSION:          D0002
  *
- *  BUILD NUMBER:        91.344.1.ga-91004030-89
+ *  BUILD NUMBER:        100.430.0.ga-100005000-9
  *
  *  DESCRIPTION:
  *
@@ -49,8 +49,8 @@
  * #endif
  */
 
-#define ETI_INTERFACE_VERSION "9.1"
-#define ETI_BUILD_NUMBER      "91.344.1.ga-91004030-89"
+#define ETI_INTERFACE_VERSION "10.0"
+#define ETI_BUILD_NUMBER      "100.430.0.ga-100005000-9"
 
 /*
  * No Value defines
@@ -226,19 +226,13 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define MAX_AMEND_BASKET_TRADE_REQUEST_BASKET_ROOT_PARTY_GRP	2
 #define MAX_AMEND_BASKET_TRADE_REQUEST_INSTRMT_MATCH_SIDE_GRP	199
 #define MAX_AMEND_BASKET_TRADE_REQUEST_BASKET_SIDE_ALLOC_GRP	398
-#define MAX_AMEND_BASKET_TRADE_REQUEST_BASKET_SIDE_ALLOC_GRP_R90	198
 #define MAX_APPROVE_BASKET_TRADE_REQUEST_BASKET_SIDE_ALLOC_EXT_GRP	398
-#define MAX_APPROVE_BASKET_TRADE_REQUEST_BASKET_SIDE_ALLOC_EXT_GRP_R90	198
 #define MAX_BASKET_APPROVE_BROADCAST_BASKET_ROOT_PARTY_GRP	2
 #define MAX_BASKET_APPROVE_BROADCAST_BASKET_SIDE_ALLOC_EXT_BC_GRP	398
-#define MAX_BASKET_APPROVE_BROADCAST_BASKET_SIDE_ALLOC_EXT_BC_GRP_R90	198
 #define MAX_BASKET_BROADCAST_BASKET_ROOT_PARTY_GRP      	3
 #define MAX_BASKET_BROADCAST_INSTRMT_MATCH_SIDE_GRP     	199
-#define MAX_BASKET_BROADCAST_INSTRMT_MATCH_SIDE_GRP_R90 	99
 #define MAX_BASKET_BROADCAST_BASKET_SIDE_ALLOC_GRP      	398
-#define MAX_BASKET_BROADCAST_BASKET_SIDE_ALLOC_GRP_R90  	198
 #define MAX_BASKET_EXECUTION_BROADCAST_BASKET_EXEC_GRP  	199
-#define MAX_BASKET_EXECUTION_BROADCAST_BASKET_EXEC_GRP_R90	99
 #define MAX_CLIP_EXECUTION_NOTIFICATION_FILLS_GRP       	100
 #define MAX_CLIP_EXECUTION_NOTIFICATION_INSTRMNT_LEG_EXEC_GRP	600
 #define MAX_CLIP_RESPONSE_CROSS_REQUEST_ACK_SIDE_GRP    	2
@@ -253,7 +247,6 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define MAX_ENTER_BASKET_TRADE_REQUEST_BASKET_ROOT_PARTY_GRP	2
 #define MAX_ENTER_BASKET_TRADE_REQUEST_INSTRMT_MATCH_SIDE_GRP	199
 #define MAX_ENTER_BASKET_TRADE_REQUEST_BASKET_SIDE_ALLOC_GRP	398
-#define MAX_ENTER_BASKET_TRADE_REQUEST_BASKET_SIDE_ALLOC_GRP_R90	198
 #define MAX_ENTER_CLIP_REQUEST_CROSS_REQUEST_SIDE_GRP   	2
 #define MAX_ENTER_CLIP_REQUEST_SIDE_CROSS_LEG_GRP       	40
 #define MAX_ENTER_TES_TRADE_REQUEST_SIDE_ALLOC_GRP      	99
@@ -270,18 +263,24 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define MAX_MODIFY_BASKET_TRADE_REQUEST_BASKET_ROOT_PARTY_GRP	2
 #define MAX_MODIFY_BASKET_TRADE_REQUEST_INSTRMT_MATCH_SIDE_GRP	199
 #define MAX_MODIFY_BASKET_TRADE_REQUEST_BASKET_SIDE_ALLOC_GRP	398
-#define MAX_MODIFY_BASKET_TRADE_REQUEST_BASKET_SIDE_ALLOC_GRP_R90	198
 #define MAX_MODIFY_ORDER_COMPLEX_REQUEST_LEG_ORD_GRP    	20
+#define MAX_MODIFY_ORDER_NR_RESPONSE_ORDER_EVENT_GRP    	100
+#define MAX_MODIFY_ORDER_RESPONSE_ORDER_EVENT_GRP       	100
 #define MAX_MODIFY_TES_TRADE_REQUEST_SIDE_ALLOC_GRP     	99
 #define MAX_MODIFY_TES_TRADE_REQUEST_TRD_INSTRMNT_LEG_GRP	20
 #define MAX_NEW_ORDER_COMPLEX_REQUEST_LEG_ORD_GRP       	20
+#define MAX_NEW_ORDER_NR_RESPONSE_ORDER_EVENT_GRP       	100
+#define MAX_NEW_ORDER_RESPONSE_ORDER_EVENT_GRP          	100
 #define MAX_ORDER_EXEC_NOTIFICATION_FILLS_GRP           	100
 #define MAX_ORDER_EXEC_NOTIFICATION_INSTRMNT_LEG_EXEC_GRP	600
+#define MAX_ORDER_EXEC_NOTIFICATION_ORDER_EVENT_GRP     	100
 #define MAX_ORDER_EXEC_REPORT_BROADCAST_LEG_ORD_GRP     	20
 #define MAX_ORDER_EXEC_REPORT_BROADCAST_FILLS_GRP       	100
 #define MAX_ORDER_EXEC_REPORT_BROADCAST_INSTRMNT_LEG_EXEC_GRP	600
+#define MAX_ORDER_EXEC_REPORT_BROADCAST_ORDER_EVENT_GRP 	100
 #define MAX_ORDER_EXEC_RESPONSE_FILLS_GRP               	100
 #define MAX_ORDER_EXEC_RESPONSE_INSTRMNT_LEG_EXEC_GRP   	600
+#define MAX_ORDER_EXEC_RESPONSE_ORDER_EVENT_GRP         	100
 #define MAX_PRE_TRADE_RISK_LIMIT_RESPONSE_RISK_LIMITS_RPT_GRP	64
 #define MAX_PRE_TRADE_RISK_LIMITS_DEFINITION_REQUEST_RISK_LIMIT_QTY_GRP	2
 #define MAX_QUOTE_ACTIVATION_NOTIFICATION_NOT_AFFECTED_SECURITIES_GRP	500
@@ -289,6 +288,10 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define MAX_QUOTE_EXECUTION_REPORT_QUOTE_EVENT_GRP      	100
 #define MAX_QUOTE_EXECUTION_REPORT_QUOTE_LEG_EXEC_GRP   	600
 #define MAX_SRQS_CREATE_DEAL_NOTIFICATION_ORDER_BOOK_ITEM_GRP	26
+#define MAX_SRQS_CREATE_DEAL_NOTIFICATION_SRQS_TARGET_PARTY_TRD_GRP	30
+#define MAX_SRQS_DEAL_NOTIFICATION_SRQS_TARGET_PARTY_TRD_GRP	30
+#define MAX_SRQS_DEAL_RESPONSE_SRQS_QUOTE_GRP           	30
+#define MAX_SRQS_HIT_QUOTE_REQUEST_SRQS_HIT_QUOTE_GRP   	30
 #define MAX_SRQS_INQUIRE_SMART_RESPONDENT_RESPONSE_SMART_PARTY_DETAIL_GRP	1000
 #define MAX_SRQS_NEGOTIATION_REQUESTER_NOTIFICATION_TARGET_PARTIES	50
 #define MAX_SRQS_OPEN_NEGOTIATION_NOTIFICATION_QUOT_REQ_LEGS_GRP	20
@@ -302,16 +305,13 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define MAX_TES_APPROVE_BROADCAST_INSTRUMENT_ATTRIBUTE_GRP	6
 #define MAX_TES_APPROVE_BROADCAST_UNDERLYING_STIP_GRP   	1
 #define MAX_TES_BROADCAST_SIDE_ALLOC_GRPBC              	99
-#define MAX_TES_BROADCAST_SIDE_ALLOC_GRPBC_R90          	30
 #define MAX_TES_BROADCAST_TRD_INSTRMNT_LEG_GRP          	20
 #define MAX_TES_BROADCAST_INSTRUMENT_EVENT_GRP          	2
 #define MAX_TES_BROADCAST_INSTRUMENT_ATTRIBUTE_GRP      	6
 #define MAX_TES_BROADCAST_UNDERLYING_STIP_GRP           	1
 #define MAX_TES_REVERSAL_BROADCAST_SIDE_ALLOC_GRPBC     	99
-#define MAX_TES_REVERSAL_BROADCAST_SIDE_ALLOC_GRPBC_R90 	30
 #define MAX_TES_TRADE_BROADCAST_SRQS_RELATED_TRADE_ID_GRP	12
 #define MAX_TES_UPLOAD_BROADCAST_SIDE_ALLOC_EXT_GRP     	99
-#define MAX_TES_UPLOAD_BROADCAST_SIDE_ALLOC_EXT_GRP_R90 	30
 #define MAX_TES_UPLOAD_BROADCAST_TRD_INSTRMNT_LEG_GRP   	20
 #define MAX_TES_UPLOAD_BROADCAST_INSTRUMENT_EVENT_GRP   	2
 #define MAX_TES_UPLOAD_BROADCAST_INSTRUMENT_ATTRIBUTE_GRP	6
@@ -417,6 +417,11 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define ENUM_BASKET_TRADE_REPORT_TYPE_ADDENDUM           4
 #define ENUM_BASKET_TRADE_REPORT_TYPE_NO_WAS_SUBSTITUE   5
 #define ENUM_BASKET_TRADE_REPORT_TYPE_NO_VALUE           ((uint8_t) 0xff)
+
+// DataType BidPxIsLocked
+#define ENUM_BID_PX_IS_LOCKED_NO                         0
+#define ENUM_BID_PX_IS_LOCKED_YES                        1
+#define ENUM_BID_PX_IS_LOCKED_NO_VALUE                   ((uint8_t) 0xff)
 
 // DataType ComplianceText
 #define LEN_COMPLIANCE_TEXT                              20
@@ -543,6 +548,7 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define ENUM_EXEC_RESTATEMENT_REASON_PENDING_CANCELLATION_EXECUTED 199
 #define ENUM_EXEC_RESTATEMENT_REASON_BOC_ORDER_CANCELLED 212
 #define ENUM_EXEC_RESTATEMENT_REASON_PANIC_CANCEL        261
+#define ENUM_EXEC_RESTATEMENT_REASON_MARKET_ORDER_UNCROSSING 302
 #define ENUM_EXEC_RESTATEMENT_REASON_CLIP_EXECUTION      340
 #define ENUM_EXEC_RESTATEMENT_REASON_CLIP_ARRANGEMENT_TIME_OUT 343
 #define ENUM_EXEC_RESTATEMENT_REASON_CLIP_ARRANGEMENT_VALIDATION 344
@@ -907,6 +913,11 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define ENUM_NUMBER_OF_RESP_DISCLOSURE_INSTRUCTION_YES   1
 #define ENUM_NUMBER_OF_RESP_DISCLOSURE_INSTRUCTION_NO_VALUE ((uint8_t) 0xff)
 
+// DataType OfferPxIsLocked
+#define ENUM_OFFER_PX_IS_LOCKED_NO                       0
+#define ENUM_OFFER_PX_IS_LOCKED_YES                      1
+#define ENUM_OFFER_PX_IS_LOCKED_NO_VALUE                 ((uint8_t) 0xff)
+
 // DataType OrdStatus
 #define LEN_ORD_STATUS                                   1
 #define ENUM_ORD_STATUS_NEW                              "0"
@@ -948,6 +959,10 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define ENUM_ORDER_CATEGORY_QUOTE_CHAR                   '2'
 #define ENUM_ORDER_CATEGORY_NO_VALUE                     0
 
+// DataType OrderEventReason
+#define ENUM_ORDER_EVENT_REASON_SMP                      100
+#define ENUM_ORDER_EVENT_REASON_NO_VALUE                 ((uint8_t) 0xff)
+
 // DataType OrderOrigination
 #define ENUM_ORDER_ORIGINATION_DIRECT_ACCESS_OR_SPONSORED_ACCESS_CUSTOMER 5
 #define ENUM_ORDER_ORIGINATION_NO_VALUE                  ((uint8_t) 0xff)
@@ -956,6 +971,11 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define ENUM_ORDER_QTY_DISCLOSURE_INSTRUCTION_NO         0
 #define ENUM_ORDER_QTY_DISCLOSURE_INSTRUCTION_YES        1
 #define ENUM_ORDER_QTY_DISCLOSURE_INSTRUCTION_NO_VALUE   ((uint8_t) 0xff)
+
+// DataType OrderQtyIsLocked
+#define ENUM_ORDER_QTY_IS_LOCKED_NO                      0
+#define ENUM_ORDER_QTY_IS_LOCKED_YES                     1
+#define ENUM_ORDER_QTY_IS_LOCKED_NO_VALUE                ((uint8_t) 0xff)
 
 // DataType OrderRoutingIndicator
 #define LEN_ORDER_ROUTING_INDICATOR                      1
@@ -1019,6 +1039,9 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 
 // DataType Pad6
 #define LEN_PAD6                                         6
+
+// DataType Pad6_1
+#define LEN_PAD6_1                                       6
 
 // DataType Pad6_2
 #define LEN_PAD6_2                                       6
@@ -1161,9 +1184,25 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define ENUM_PUT_OR_CALL_CALL                            1
 #define ENUM_PUT_OR_CALL_NO_VALUE                        ((uint8_t) 0xff)
 
+// DataType QuoteCancelReason
+#define ENUM_QUOTE_CANCEL_REASON_EXPIRED                 5
+#define ENUM_QUOTE_CANCEL_REASON_NO_VALUE                ((uint8_t) 0xff)
+
 // DataType QuoteCancelType
 #define ENUM_QUOTE_CANCEL_TYPE_CANCEL_ALL_QUOTES         4
 #define ENUM_QUOTE_CANCEL_TYPE_NO_VALUE                  ((uint8_t) 0xff)
+
+// DataType QuoteCondition
+#define LEN_QUOTE_CONDITION                              1
+#define ENUM_QUOTE_CONDITION_ACTIVE                      "A"
+#define ENUM_QUOTE_CONDITION_ACTIVE_CHAR                 'A'
+#define ENUM_QUOTE_CONDITION_CLOSED                      "B"
+#define ENUM_QUOTE_CONDITION_CLOSED_CHAR                 'B'
+#define ENUM_QUOTE_CONDITION_SUSPENDED                   "z"
+#define ENUM_QUOTE_CONDITION_SUSPENDED_CHAR              'z'
+#define ENUM_QUOTE_CONDITION_EXPIRED                     "8"
+#define ENUM_QUOTE_CONDITION_EXPIRED_CHAR                '8'
+#define ENUM_QUOTE_CONDITION_NO_VALUE                    0
 
 // DataType QuoteEntryRejectReason
 #define ENUM_QUOTE_ENTRY_REJECT_REASON_UNKNOWN_SECURITY  1
@@ -1196,6 +1235,7 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define ENUM_QUOTE_ENTRY_REJECT_REASON_MATCH_PRICE_NOT_ON_PRICE_STEP 156
 #define ENUM_QUOTE_ENTRY_REJECT_REASON_QUANTITY_LIMIT_EXCEEDS_TSL 161
 #define ENUM_QUOTE_ENTRY_REJECT_REASON_TOO_MANY_ORDERS_AND_QUOTES_IN_ORDER_BOOK 163
+#define ENUM_QUOTE_ENTRY_REJECT_REASON_CONTRACT_CANNOT_BE_TRADED_DUE_TO_INSUFFICIENT_ELIGIBILITY 166
 #define ENUM_QUOTE_ENTRY_REJECT_REASON_NO_VALUE          ((uint32_t) 0xffffffff)
 
 // DataType QuoteEntryStatus
@@ -1229,6 +1269,7 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define ENUM_QUOTE_EVENT_TYPE_REMOVED_QUOTE_SIDE         3
 #define ENUM_QUOTE_EVENT_TYPE_PARTIALLY_FILLED           4
 #define ENUM_QUOTE_EVENT_TYPE_FILLED                     5
+#define ENUM_QUOTE_EVENT_TYPE_REMOVED_QUANTITY           6
 #define ENUM_QUOTE_EVENT_TYPE_NO_VALUE                   ((uint8_t) 0xff)
 
 // DataType QuoteInstruction
@@ -1426,6 +1467,11 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define ENUM_SECONDARY_GATEWAY_STATUS_ACTIVE             1
 #define ENUM_SECONDARY_GATEWAY_STATUS_NO_VALUE           ((uint8_t) 0xff)
 
+// DataType SelectiveRequestForQuoteRtmServiceStatus
+#define ENUM_SELECTIVE_REQUEST_FOR_QUOTE_RTM_SERVICE_STATUS_UNAVAILABLE 0
+#define ENUM_SELECTIVE_REQUEST_FOR_QUOTE_RTM_SERVICE_STATUS_AVAILABLE 1
+#define ENUM_SELECTIVE_REQUEST_FOR_QUOTE_RTM_SERVICE_STATUS_NO_VALUE ((uint8_t) 0xff)
+
 // DataType SelectiveRequestForQuoteServiceStatus
 #define ENUM_SELECTIVE_REQUEST_FOR_QUOTE_SERVICE_STATUS_UNAVAILABLE 0
 #define ENUM_SELECTIVE_REQUEST_FOR_QUOTE_SERVICE_STATUS_AVAILABLE 1
@@ -1508,6 +1554,11 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define ENUM_SIDE_DISCLOSURE_INSTRUCTION_YES             1
 #define ENUM_SIDE_DISCLOSURE_INSTRUCTION_NO_VALUE        ((uint8_t) 0xff)
 
+// DataType SideIsLocked
+#define ENUM_SIDE_IS_LOCKED_NO                           0
+#define ENUM_SIDE_IS_LOCKED_YES                          1
+#define ENUM_SIDE_IS_LOCKED_NO_VALUE                     ((uint8_t) 0xff)
+
 // DataType SideLiquidityInd
 #define ENUM_SIDE_LIQUIDITY_IND_ADDED_LIQUIDITY          1
 #define ENUM_SIDE_LIQUIDITY_IND_REMOVED_LIQUIDITY        2
@@ -1576,6 +1627,10 @@ const int ETI_DERIVATIVES_TID_MAX = 10719;  // highest assigned template ID
 #define ENUM_TRAD_SES_MODE_ACCEPTANCE                    4
 #define ENUM_TRAD_SES_MODE_DISASTER_RECOVERY             5
 #define ENUM_TRAD_SES_MODE_NO_VALUE                      ((uint8_t) 0xff)
+
+// DataType TradeAggregationTransType
+#define ENUM_TRADE_AGGREGATION_TRANS_TYPE_NEW            0
+#define ENUM_TRADE_AGGREGATION_TRANS_TYPE_NO_VALUE       ((uint8_t) 0xff)
 
 // DataType TradeAllocStatus
 #define ENUM_TRADE_ALLOC_STATUS_PENDING                  1
@@ -2059,6 +2114,16 @@ typedef struct
     char Pad6[LEN_PAD6];
 } OrderBookItemGrpSeqT;
 
+// Structure: OrderEventGrp
+typedef struct
+{
+    int64_t OrderEventPx;
+    int64_t OrderEventQty;
+    uint32_t OrderEventMatchID;
+    uint8_t OrderEventReason;
+    char Pad3[LEN_PAD3];
+} OrderEventGrpSeqT;
+
 // Structure: PartyDetailsGrp
 typedef struct
 {
@@ -2203,6 +2268,7 @@ typedef struct
     int64_t RiskLimitQty;
     int64_t RiskLimitOpenQty;
     int64_t RiskLimitNetPositionQty;
+    int64_t NettingCoefficient;
     uint8_t RiskLimitType;
     uint8_t RiskLimitRequestingPartyRole;
     uint8_t RiskLimitViolationIndicator;
@@ -2210,12 +2276,39 @@ typedef struct
     char Pad2[LEN_PAD2];
 } RiskLimitsRptGrpSeqT;
 
+// Structure: SRQSHitQuoteGrp
+typedef struct
+{
+    int64_t OrderQty;
+    uint64_t QuoteID;
+    uint8_t Side;
+    char Pad7[LEN_PAD7];
+} SRQSHitQuoteGrpSeqT;
+
+// Structure: SRQSQuoteGrp
+typedef struct
+{
+    uint64_t QuoteID;
+} SRQSQuoteGrpSeqT;
+
 // Structure: SRQSRelatedTradeIDGrp
 typedef struct
 {
     uint32_t SRQSRelatedTradeID;
     char Pad4[LEN_PAD4];
 } SRQSRelatedTradeIDGrpSeqT;
+
+// Structure: SRQSTargetPartyTrdGrp
+typedef struct
+{
+    int64_t SideLastQty;
+    uint64_t QuoteID;
+    uint32_t TargetPartyIDExecutingTrader;
+    char TargetPartyExecutingFirm[LEN_TARGET_PARTY_EXECUTING_FIRM];
+    char TargetPartyExecutingTrader[LEN_TARGET_PARTY_EXECUTING_TRADER];
+    char TargetPartyEnteringTrader[LEN_TARGET_PARTY_ENTERING_TRADER];
+    char Pad3[LEN_PAD3];
+} SRQSTargetPartyTrdGrpSeqT;
 
 // Structure: SessionsGrp
 typedef struct
@@ -2394,11 +2487,13 @@ typedef struct
     int64_t StrikePrice;
     int32_t MarketSegmentID;
     uint32_t MaturityDate;
+    uint32_t ContractDate;
     char SettlMethod[LEN_SETTL_METHOD];
     uint8_t OptAttribute;
     uint8_t PutOrCall;
     uint8_t ExerciseStyle;
     char ComplianceText[LEN_COMPLIANCE_TEXT];
+    char Pad4[LEN_PAD4];
 } AddFlexibleInstrumentRequestT;
 
 // Message:	    AddFlexibleInstrumentResponse
@@ -2414,12 +2509,13 @@ typedef struct
     int64_t StrikePrice;
     int32_t MarketSegmentID;
     uint32_t MaturityDate;
+    uint32_t ContractDate;
     uint8_t ProductComplex;
     char SettlMethod[LEN_SETTL_METHOD];
     uint8_t OptAttribute;
     uint8_t PutOrCall;
     uint8_t ExerciseStyle;
-    char Pad3[LEN_PAD3];
+    char Pad7[LEN_PAD7];
 } AddFlexibleInstrumentResponseT;
 
 // Message:	    AmendBasketTradeRequest
@@ -2977,7 +3073,8 @@ typedef struct
     uint8_t PartyIdInvestmentDecisionMakerQualifier;
     uint8_t ExecutingTraderQualifier;
     char FIXClOrdID[LEN_FIX_CL_ORDID];
-    char Pad1[LEN_PAD1];
+    char ComplianceText[LEN_COMPLIANCE_TEXT];
+    char Pad5[LEN_PAD5];
 } DeleteOrderComplexRequestT;
 
 // Message:	    DeleteOrderNRResponse
@@ -3046,7 +3143,8 @@ typedef struct
     uint8_t PartyIdInvestmentDecisionMakerQualifier;
     uint8_t ExecutingTraderQualifier;
     char FIXClOrdID[LEN_FIX_CL_ORDID];
-    char Pad5[LEN_PAD5];
+    char ComplianceText[LEN_COMPLIANCE_TEXT];
+    char Pad1[LEN_PAD1];
 } DeleteOrderSingleRequestT;
 
 // Message:	    DeleteTESTradeRequest
@@ -3586,7 +3684,8 @@ typedef struct
     uint8_t OrderOrigination;
     uint8_t PartyIdInvestmentDecisionMakerQualifier;
     uint8_t ExecutingTraderQualifier;
-    char Pad2[LEN_PAD2];
+    char ComplianceText[LEN_COMPLIANCE_TEXT];
+    char Pad6[LEN_PAD6];
 } ModifyOrderComplexShortRequestT;
 
 // Message:	    ModifyOrderNRResponse
@@ -3612,6 +3711,9 @@ typedef struct
     uint8_t ProductComplex;
     uint8_t Triggered;
     uint8_t TransactionDelayIndicator;
+    uint8_t NoOrderEvents;
+    char Pad7[LEN_PAD7];
+    OrderEventGrpSeqT OrderEventGrp[MAX_MODIFY_ORDER_NR_RESPONSE_ORDER_EVENT_GRP];
 } ModifyOrderNRResponseT;
 
 // Message:	    ModifyOrderResponse
@@ -3638,6 +3740,9 @@ typedef struct
     uint8_t ProductComplex;
     uint8_t Triggered;
     uint8_t TransactionDelayIndicator;
+    uint8_t NoOrderEvents;
+    char Pad7[LEN_PAD7];
+    OrderEventGrpSeqT OrderEventGrp[MAX_MODIFY_ORDER_RESPONSE_ORDER_EVENT_GRP];
 } ModifyOrderResponseT;
 
 // Message:	    ModifyOrderSingleRequest
@@ -3721,7 +3826,8 @@ typedef struct
     uint8_t OrderOrigination;
     uint8_t PartyIdInvestmentDecisionMakerQualifier;
     uint8_t ExecutingTraderQualifier;
-    char Pad3[LEN_PAD3];
+    char ComplianceText[LEN_COMPLIANCE_TEXT];
+    char Pad7[LEN_PAD7];
 } ModifyOrderSingleShortRequestT;
 
 // Message:	    ModifyTESTradeRequest
@@ -3830,7 +3936,8 @@ typedef struct
     uint8_t OrderOrigination;
     uint8_t PartyIdInvestmentDecisionMakerQualifier;
     uint8_t ExecutingTraderQualifier;
-    char Pad2[LEN_PAD2];
+    char ComplianceText[LEN_COMPLIANCE_TEXT];
+    char Pad6[LEN_PAD6];
 } NewOrderComplexShortRequestT;
 
 // Message:	    NewOrderNRResponse
@@ -3845,6 +3952,8 @@ typedef struct
     uint64_t ClOrdID;
     int64_t SecurityID;
     uint64_t ExecID;
+    int64_t LeavesQty;
+    int64_t CxlQty;
     char OrdStatus[LEN_ORD_STATUS];
     char ExecType[LEN_EXEC_TYPE];
     uint16_t ExecRestatementReason;
@@ -3852,6 +3961,9 @@ typedef struct
     uint8_t ProductComplex;
     uint8_t Triggered;
     uint8_t TransactionDelayIndicator;
+    uint8_t NoOrderEvents;
+    char Pad7[LEN_PAD7];
+    OrderEventGrpSeqT OrderEventGrp[MAX_NEW_ORDER_NR_RESPONSE_ORDER_EVENT_GRP];
 } NewOrderNRResponseT;
 
 // Message:	    NewOrderResponse
@@ -3866,6 +3978,8 @@ typedef struct
     uint64_t ClOrdID;
     int64_t SecurityID;
     uint64_t ExecID;
+    int64_t LeavesQty;
+    int64_t CxlQty;
     uint64_t TrdRegTSEntryTime;
     uint64_t TrdRegTSTimePriority;
     char OrdStatus[LEN_ORD_STATUS];
@@ -3875,6 +3989,9 @@ typedef struct
     uint8_t ProductComplex;
     uint8_t Triggered;
     uint8_t TransactionDelayIndicator;
+    uint8_t NoOrderEvents;
+    char Pad7[LEN_PAD7];
+    OrderEventGrpSeqT OrderEventGrp[MAX_NEW_ORDER_RESPONSE_ORDER_EVENT_GRP];
 } NewOrderResponseT;
 
 // Message:	    NewOrderSingleRequest
@@ -3954,7 +4071,8 @@ typedef struct
     uint8_t OrderOrigination;
     uint8_t PartyIdInvestmentDecisionMakerQualifier;
     uint8_t ExecutingTraderQualifier;
-    char Pad3[LEN_PAD3];
+    char ComplianceText[LEN_COMPLIANCE_TEXT];
+    char Pad7[LEN_PAD7];
 } NewOrderSingleShortRequestT;
 
 // Message:	    NewsBroadcast
@@ -3999,9 +4117,11 @@ typedef struct
     uint8_t CrossedIndicator;
     char FIXClOrdID[LEN_FIX_CL_ORDID];
     uint8_t NoFills;
-    char Pad5[LEN_PAD5];
+    uint8_t NoOrderEvents;
+    char Pad4[LEN_PAD4];
     FillsGrpSeqT FillsGrp[MAX_ORDER_EXEC_NOTIFICATION_FILLS_GRP];
     InstrmntLegExecGrpSeqT InstrmntLegExecGrp[MAX_ORDER_EXEC_NOTIFICATION_INSTRMNT_LEG_EXEC_GRP];
+    OrderEventGrpSeqT OrderEventGrp[MAX_ORDER_EXEC_NOTIFICATION_ORDER_EVENT_GRP];
 } OrderExecNotificationT;
 
 // Message:	    OrderExecReportBroadcast
@@ -4060,12 +4180,14 @@ typedef struct
     char FIXClOrdID[LEN_FIX_CL_ORDID];
     uint8_t NoFills;
     uint8_t NoLegs;
+    uint8_t NoOrderEvents;
     uint8_t Triggered;
     uint8_t CrossedIndicator;
-    char Pad2[LEN_PAD2];
+    char Pad1[LEN_PAD1];
     LegOrdGrpSeqT LegOrdGrp[MAX_ORDER_EXEC_REPORT_BROADCAST_LEG_ORD_GRP];
     FillsGrpSeqT FillsGrp[MAX_ORDER_EXEC_REPORT_BROADCAST_FILLS_GRP];
     InstrmntLegExecGrpSeqT InstrmntLegExecGrp[MAX_ORDER_EXEC_REPORT_BROADCAST_INSTRMNT_LEG_EXEC_GRP];
+    OrderEventGrpSeqT OrderEventGrp[MAX_ORDER_EXEC_REPORT_BROADCAST_ORDER_EVENT_GRP];
 } OrderExecReportBroadcastT;
 
 // Message:	    OrderExecResponse
@@ -4097,8 +4219,11 @@ typedef struct
     uint8_t CrossedIndicator;
     uint8_t TransactionDelayIndicator;
     uint8_t NoFills;
+    uint8_t NoOrderEvents;
+    char Pad7[LEN_PAD7];
     FillsGrpSeqT FillsGrp[MAX_ORDER_EXEC_RESPONSE_FILLS_GRP];
     InstrmntLegExecGrpSeqT InstrmntLegExecGrp[MAX_ORDER_EXEC_RESPONSE_INSTRMNT_LEG_EXEC_GRP];
+    OrderEventGrpSeqT OrderEventGrp[MAX_ORDER_EXEC_RESPONSE_ORDER_EVENT_GRP];
 } OrderExecResponseT;
 
 // Message:	    PartyActionReport
@@ -4189,6 +4314,7 @@ typedef struct
 {
     MessageHeaderInCompT MessageHeaderIn;
     RequestHeaderCompT RequestHeader;
+    int64_t NettingCoefficient;
     int32_t MarketSegmentID;
     uint8_t RiskLimitPlatform;
     uint8_t NoRiskLimitsQty;
@@ -4419,7 +4545,6 @@ typedef struct
     uint64_t TransactTime;
     int64_t LastPx;
     int64_t LastQty;
-    uint64_t QuoteID;
     int64_t SecurityID;
     uint64_t ExpireTime;
     int64_t UnderlyingPx;
@@ -4430,7 +4555,6 @@ typedef struct
     uint32_t NegotiationID;
     uint32_t TradeID;
     uint32_t OrigTradeID;
-    uint32_t TargetPartyIDExecutingTrader;
     uint8_t TrdRptStatus;
     uint8_t TradeReportType;
     char MessageEventSource[LEN_MESSAGE_EVENT_SOURCE];
@@ -4439,11 +4563,10 @@ typedef struct
     uint8_t TradingCapacity;
     uint8_t TradePublishIndicator;
     uint8_t HedgingInstruction;
+    uint8_t NoSRQSTargetPartyTrdGrps;
     char RootPartyExecutingFirm[LEN_ROOT_PARTY_EXECUTING_FIRM];
     char RootPartyExecutingTrader[LEN_ROOT_PARTY_EXECUTING_TRADER];
     char RootPartyEnteringTrader[LEN_ROOT_PARTY_ENTERING_TRADER];
-    char TargetPartyExecutingFirm[LEN_TARGET_PARTY_EXECUTING_FIRM];
-    char TargetPartyExecutingTrader[LEN_TARGET_PARTY_EXECUTING_TRADER];
     char FirmTradeID[LEN_FIRM_TRADEID];
     char FirmNegotiationID[LEN_FIRM_NEGOTIATIONID];
     char FreeText1[LEN_FREE_TEXT1];
@@ -4459,8 +4582,9 @@ typedef struct
     char PartyIDLocationID[LEN_PARTY_ID_LOCATIONID];
     char ComplianceText[LEN_COMPLIANCE_TEXT];
     char PartyIDTakeUpTradingFirm[LEN_PARTY_ID_TAKE_UP_TRADING_FIRM];
-    char Pad5[LEN_PAD5];
+    char Pad3[LEN_PAD3];
     OrderBookItemGrpSeqT OrderBookItemGrp[MAX_SRQS_CREATE_DEAL_NOTIFICATION_ORDER_BOOK_ITEM_GRP];
+    SRQSTargetPartyTrdGrpSeqT SRQSTargetPartyTrdGrp[MAX_SRQS_CREATE_DEAL_NOTIFICATION_SRQS_TARGET_PARTY_TRD_GRP];
 } SRQSCreateDealNotificationT;
 
 // Message:	    SRQSDealNotification
@@ -4478,18 +4602,15 @@ typedef struct
     int64_t LastQty;
     uint32_t NegotiationID;
     uint32_t TradeID;
-    uint32_t TargetPartyIDExecutingTrader;
     uint16_t RequestingPartySubIDType;
     uint8_t TrdRptStatus;
     uint8_t TradeRequestResult;
     char MessageEventSource[LEN_MESSAGE_EVENT_SOURCE];
     uint8_t TradingCapacity;
+    uint8_t NoSRQSTargetPartyTrdGrps;
     char RootPartyExecutingFirm[LEN_ROOT_PARTY_EXECUTING_FIRM];
     char RootPartyExecutingTrader[LEN_ROOT_PARTY_EXECUTING_TRADER];
     char RootPartyEnteringTrader[LEN_ROOT_PARTY_ENTERING_TRADER];
-    char TargetPartyExecutingFirm[LEN_TARGET_PARTY_EXECUTING_FIRM];
-    char TargetPartyExecutingTrader[LEN_TARGET_PARTY_EXECUTING_TRADER];
-    char TargetPartyEnteringTrader[LEN_TARGET_PARTY_ENTERING_TRADER];
     char FirmTradeID[LEN_FIRM_TRADEID];
     char FirmNegotiationID[LEN_FIRM_NEGOTIATIONID];
     char FreeText1[LEN_FREE_TEXT1];
@@ -4505,7 +4626,8 @@ typedef struct
     char PartyIDLocationID[LEN_PARTY_ID_LOCATIONID];
     char ComplianceText[LEN_COMPLIANCE_TEXT];
     char PartyIDTakeUpTradingFirm[LEN_PARTY_ID_TAKE_UP_TRADING_FIRM];
-    char Pad5[LEN_PAD5];
+    char Pad1[LEN_PAD1];
+    SRQSTargetPartyTrdGrpSeqT SRQSTargetPartyTrdGrp[MAX_SRQS_DEAL_NOTIFICATION_SRQS_TARGET_PARTY_TRD_GRP];
 } SRQSDealNotificationT;
 
 // Message:	    SRQSDealResponse
@@ -4517,13 +4639,14 @@ typedef struct
     MessageHeaderOutCompT MessageHeaderOut;
     ResponseHeaderCompT ResponseHeader;
     int64_t SecurityID;
-    uint64_t QuoteID;
     uint32_t NegotiationID;
     uint32_t TradeID;
     uint32_t SecondaryTradeID;
+    uint8_t NoSRQSQuoteGrps;
     char FirmTradeID[LEN_FIRM_TRADEID];
     char FirmNegotiationID[LEN_FIRM_NEGOTIATIONID];
-    char Pad4[LEN_PAD4];
+    char Pad3[LEN_PAD3];
+    SRQSQuoteGrpSeqT SRQSQuoteGrp[MAX_SRQS_DEAL_RESPONSE_SRQS_QUOTE_GRP];
 } SRQSDealResponseT;
 
 // Message:	    SRQSEnterQuoteRequest
@@ -4543,6 +4666,7 @@ typedef struct
     uint64_t PartyIdInvestmentDecisionMaker;
     uint64_t ExecutingTrader;
     int64_t QuoteRefPrice;
+    uint64_t ValidUntilTime;
     int32_t MarketSegmentID;
     uint32_t NegotiationID;
     uint8_t OrderAttributeLiquidityProvision;
@@ -4575,8 +4699,6 @@ typedef struct
 {
     MessageHeaderInCompT MessageHeaderIn;
     RequestHeaderCompT RequestHeader;
-    uint64_t QuoteID;
-    int64_t OrderQty;
     uint64_t ValidUntilTime;
     int64_t UnderlyingQty;
     int64_t UnderlyingPriceStipValue;
@@ -4585,7 +4707,6 @@ typedef struct
     uint64_t ExecutingTrader;
     int32_t MarketSegmentID;
     uint32_t NegotiationID;
-    uint8_t Side;
     uint8_t OrderAttributeLiquidityProvision;
     uint8_t ExecutingTraderQualifier;
     uint8_t PartyIdInvestmentDecisionMakerQualifier;
@@ -4593,6 +4714,7 @@ typedef struct
     uint8_t TradePublishIndicator;
     uint8_t OrderOrigination;
     uint8_t HedgingInstruction;
+    uint8_t NoSRQSQuoteGrps;
     char PartyExecutingFirm[LEN_PARTY_EXECUTING_FIRM];
     char PartyExecutingTrader[LEN_PARTY_EXECUTING_TRADER];
     char FirmTradeID[LEN_FIRM_TRADEID];
@@ -4610,6 +4732,7 @@ typedef struct
     char ComplianceText[LEN_COMPLIANCE_TEXT];
     char PartyIDTakeUpTradingFirm[LEN_PARTY_ID_TAKE_UP_TRADING_FIRM];
     char Pad2[LEN_PAD2];
+    SRQSHitQuoteGrpSeqT SRQSHitQuoteGrp[MAX_SRQS_HIT_QUOTE_REQUEST_SRQS_HIT_QUOTE_GRP];
 } SRQSHitQuoteRequestT;
 
 // Message:	    SRQSInquireSmartRespondentRequest
@@ -4665,9 +4788,10 @@ typedef struct
     uint16_t TradeToQuoteRatioPosition;
     uint8_t QuoteType;
     uint8_t QuoteSubType;
-    uint8_t QuoteStatus;
     uint8_t QuoteInstruction;
     uint8_t Side;
+    uint8_t TradeAggregationTransType;
+    char QuoteCondition[LEN_QUOTE_CONDITION];
     char PartyExecutingFirm[LEN_PARTY_EXECUTING_FIRM];
     char PartyExecutingTrader[LEN_PARTY_EXECUTING_TRADER];
     char PartyEnteringTrader[LEN_PARTY_ENTERING_TRADER];
@@ -4676,7 +4800,6 @@ typedef struct
     char FirmNegotiationID[LEN_FIRM_NEGOTIATIONID];
     char FreeText5[LEN_FREE_TEXT5];
     char PartyOrderOriginationTrader[LEN_PARTY_ORDER_ORIGINATION_TRADER];
-    char Pad1[LEN_PAD1];
 } SRQSNegotiationNotificationT;
 
 // Message:	    SRQSNegotiationRequesterNotification
@@ -4699,22 +4822,24 @@ typedef struct
     int64_t LastQty;
     uint64_t EffectiveTime;
     uint64_t LastUpdateTime;
+    int64_t TradeToRequestRatio;
     uint32_t NegotiationID;
     uint32_t NumberOfRespondents;
     uint8_t QuoteType;
     uint8_t QuoteSubType;
-    uint8_t QuoteStatus;
     uint8_t NoTargetPartyIDs;
     uint8_t NumberOfRespDisclosureInstruction;
     uint8_t Side;
     uint8_t ShowLastDealOnClosure;
+    uint8_t TradeAggregationTransType;
+    char QuoteCondition[LEN_QUOTE_CONDITION];
     char PartyExecutingFirm[LEN_PARTY_EXECUTING_FIRM];
     char PartyExecutingTrader[LEN_PARTY_EXECUTING_TRADER];
     char PartyEnteringTrader[LEN_PARTY_ENTERING_TRADER];
     char FirmNegotiationID[LEN_FIRM_NEGOTIATIONID];
     char FreeText5[LEN_FREE_TEXT5];
     char PartyOrderOriginationTrader[LEN_PARTY_ORDER_ORIGINATION_TRADER];
-    char Pad4[LEN_PAD4];
+    char Pad3[LEN_PAD3];
     TargetPartiesSeqT TargetParties[MAX_SRQS_NEGOTIATION_REQUESTER_NOTIFICATION_TARGET_PARTIES];
 } SRQSNegotiationRequesterNotificationT;
 
@@ -4729,7 +4854,7 @@ typedef struct
     uint64_t TransactTime;
     uint64_t EffectiveTime;
     uint32_t NegotiationID;
-    uint8_t QuoteStatus;
+    char QuoteCondition[LEN_QUOTE_CONDITION];
     char FirmNegotiationID[LEN_FIRM_NEGOTIATIONID];
     char Pad7[LEN_PAD7];
 } SRQSNegotiationStatusNotificationT;
@@ -4762,11 +4887,12 @@ typedef struct
     uint16_t TradeToQuoteRatioPosition;
     uint8_t QuoteType;
     uint8_t QuoteSubType;
-    uint8_t QuoteStatus;
     uint8_t NoLegs;
     uint8_t Side;
     uint8_t ProductComplex;
     uint8_t RespondentType;
+    uint8_t TradeAggregationTransType;
+    char QuoteCondition[LEN_QUOTE_CONDITION];
     char PartyExecutingFirm[LEN_PARTY_EXECUTING_FIRM];
     char PartyExecutingTrader[LEN_PARTY_EXECUTING_TRADER];
     char PartyEnteringTrader[LEN_PARTY_ENTERING_TRADER];
@@ -4775,7 +4901,7 @@ typedef struct
     char FirmNegotiationID[LEN_FIRM_NEGOTIATIONID];
     char FreeText5[LEN_FREE_TEXT5];
     char PartyOrderOriginationTrader[LEN_PARTY_ORDER_ORIGINATION_TRADER];
-    char Pad7[LEN_PAD7];
+    char Pad6[LEN_PAD6];
     QuotReqLegsGrpSeqT QuotReqLegsGrp[MAX_SRQS_OPEN_NEGOTIATION_NOTIFICATION_QUOT_REQ_LEGS_GRP];
 } SRQSOpenNegotiationNotificationT;
 
@@ -4805,11 +4931,18 @@ typedef struct
     uint8_t ProductComplex;
     uint8_t RespondentType;
     uint8_t ShowLastDealOnClosure;
+    uint8_t BidPxIsLocked;
+    uint8_t OfferPxIsLocked;
+    uint8_t SideIsLocked;
+    uint8_t OrderQtyIsLocked;
+    uint8_t TradeAggregationTransType;
+    char QuoteCondition[LEN_QUOTE_CONDITION];
     char PartyExecutingFirm[LEN_PARTY_EXECUTING_FIRM];
     char PartyExecutingTrader[LEN_PARTY_EXECUTING_TRADER];
     char FreeText5[LEN_FREE_TEXT5];
     char QuoteReqID[LEN_QUOTE_REQID];
     char PartyOrderOriginationTrader[LEN_PARTY_ORDER_ORIGINATION_TRADER];
+    char Pad2[LEN_PAD2];
     QuotReqLegsGrpSeqT QuotReqLegsGrp[MAX_SRQS_OPEN_NEGOTIATION_REQUEST_QUOT_REQ_LEGS_GRP];
     TargetPartiesSeqT TargetParties[MAX_SRQS_OPEN_NEGOTIATION_REQUEST_TARGET_PARTIES];
 } SRQSOpenNegotiationRequestT;
@@ -4839,7 +4972,6 @@ typedef struct
     uint32_t NumberOfRespondents;
     uint8_t QuoteType;
     uint8_t QuoteSubType;
-    uint8_t QuoteStatus;
     uint8_t NoLegs;
     uint8_t NoTargetPartyIDs;
     uint8_t Side;
@@ -4847,13 +4979,19 @@ typedef struct
     uint8_t NumberOfRespDisclosureInstruction;
     uint8_t RespondentType;
     uint8_t ShowLastDealOnClosure;
+    uint8_t BidPxIsLocked;
+    uint8_t OfferPxIsLocked;
+    uint8_t SideIsLocked;
+    uint8_t OrderQtyIsLocked;
+    uint8_t TradeAggregationTransType;
+    char QuoteCondition[LEN_QUOTE_CONDITION];
     char PartyExecutingFirm[LEN_PARTY_EXECUTING_FIRM];
     char PartyExecutingTrader[LEN_PARTY_EXECUTING_TRADER];
     char PartyEnteringTrader[LEN_PARTY_ENTERING_TRADER];
     char FirmNegotiationID[LEN_FIRM_NEGOTIATIONID];
     char FreeText5[LEN_FREE_TEXT5];
     char PartyOrderOriginationTrader[LEN_PARTY_ORDER_ORIGINATION_TRADER];
-    char Pad1[LEN_PAD1];
+    char Pad4[LEN_PAD4];
     QuotReqLegsGrpSeqT QuotReqLegsGrp[MAX_SRQS_OPEN_NEGOTIATION_REQUESTER_NOTIFICATION_QUOT_REQ_LEGS_GRP];
     TargetPartiesSeqT TargetParties[MAX_SRQS_OPEN_NEGOTIATION_REQUESTER_NOTIFICATION_TARGET_PARTIES];
 } SRQSOpenNegotiationRequesterNotificationT;
@@ -4875,10 +5013,12 @@ typedef struct
     int64_t OfferSize;
     int64_t UnderlyingDeltaPercentage;
     int64_t QuoteRefPrice;
+    uint64_t ExpireTime;
     uint32_t NegotiationID;
     uint8_t QuotingStatus;
     uint8_t TradingCapacity;
-    char Pad2[LEN_PAD2];
+    uint8_t QuoteCancelReason;
+    char Pad1[LEN_PAD1];
     uint32_t PartyIDExecutingTrader;
     char PartyExecutingFirm[LEN_PARTY_EXECUTING_FIRM];
     char PartyExecutingTrader[LEN_PARTY_EXECUTING_TRADER];
@@ -4981,12 +5121,17 @@ typedef struct
     uint8_t NoTargetPartyIDs;
     uint8_t NumberOfRespDisclosureInstruction;
     uint8_t Side;
-    uint8_t QuoteCancelType;
     uint8_t ShowLastDealOnClosure;
+    uint8_t QuoteType;
+    uint8_t QuoteSubType;
+    uint8_t RespondentType;
+    uint8_t TradeAggregationTransType;
+    char QuoteCondition[LEN_QUOTE_CONDITION];
     char PartyExecutingFirm[LEN_PARTY_EXECUTING_FIRM];
     char PartyExecutingTrader[LEN_PARTY_EXECUTING_TRADER];
     char FreeText5[LEN_FREE_TEXT5];
     char PartyOrderOriginationTrader[LEN_PARTY_ORDER_ORIGINATION_TRADER];
+    char Pad4[LEN_PAD4];
     TargetPartiesSeqT TargetParties[MAX_SRQS_UPDATE_NEGOTIATION_REQUEST_TARGET_PARTIES];
 } SRQSUpdateNegotiationRequestT;
 
@@ -5022,7 +5167,8 @@ typedef struct
     NRBCHeaderCompT NRBCHeader;
     uint32_t SelectiveRequestForQuoteServiceTradeDate;
     uint8_t SelectiveRequestForQuoteServiceStatus;
-    char Pad3[LEN_PAD3];
+    uint8_t SelectiveRequestForQuoteRtmServiceStatus;
+    char Pad2[LEN_PAD2];
 } ServiceAvailabilityMarketBroadcastT;
 
 // Message:	    SubscribeRequest
@@ -5365,6 +5511,7 @@ typedef struct
     uint8_t RootPartyIDInvestmentDecisionMakerQualifier;
     uint8_t OrderOrigination;
     uint8_t ReversalIndicator;
+    uint8_t TradeAggregationTransType;
     char Account[LEN_ACCOUNT];
     char RootPartyIDPositionAccount[LEN_ROOT_PARTY_ID_POSITION_ACCOUNT];
     char CustOrderHandlingInst[LEN_CUST_ORDER_HANDLING_INST];
@@ -5382,7 +5529,7 @@ typedef struct
     char RegulatoryTradeID[LEN_REGULATORY_TRADEID];
     char BasketPartyContraFirm[LEN_BASKET_PARTY_CONTRA_FIRM];
     char BasketSideTradeReportID[LEN_BASKET_SIDE_TRADE_REPORTID];
-    char Pad5[LEN_PAD5];
+    char Pad4[LEN_PAD4];
     SRQSRelatedTradeIDGrpSeqT SRQSRelatedTradeIDGrp[MAX_TES_TRADE_BROADCAST_SRQS_RELATED_TRADE_ID_GRP];
 } TESTradeBroadcastT;
 
@@ -5840,19 +5987,13 @@ typedef struct
 #define MAX_AMENDBASKETTRADEREQUEST_BASKETROOTPARTYGRP  	2
 #define MAX_AMENDBASKETTRADEREQUEST_INSTRMTMATCHSIDEGRP 	199
 #define MAX_AMENDBASKETTRADEREQUEST_BASKETSIDEALLOCGRP  	398
-#define MAX_AMENDBASKETTRADEREQUEST_BASKETSIDEALLOCGRP_R90	198
 #define MAX_APPROVEBASKETTRADEREQUEST_BASKETSIDEALLOCEXTGRP	398
-#define MAX_APPROVEBASKETTRADEREQUEST_BASKETSIDEALLOCEXTGRP_R90	198
 #define MAX_BASKETAPPROVEBROADCAST_BASKETROOTPARTYGRP   	2
 #define MAX_BASKETAPPROVEBROADCAST_BASKETSIDEALLOCEXTBCGRP	398
-#define MAX_BASKETAPPROVEBROADCAST_BASKETSIDEALLOCEXTBCGRP_R90	198
 #define MAX_BASKETBROADCAST_BASKETROOTPARTYGRP          	3
 #define MAX_BASKETBROADCAST_INSTRMTMATCHSIDEGRP         	199
-#define MAX_BASKETBROADCAST_INSTRMTMATCHSIDEGRP_R90     	99
 #define MAX_BASKETBROADCAST_BASKETSIDEALLOCGRP          	398
-#define MAX_BASKETBROADCAST_BASKETSIDEALLOCGRP_R90      	198
 #define MAX_BASKETEXECUTIONBROADCAST_BASKETEXECGRP      	199
-#define MAX_BASKETEXECUTIONBROADCAST_BASKETEXECGRP_R90  	99
 #define MAX_CLIPEXECUTIONNOTIFICATION_FILLSGRP          	100
 #define MAX_CLIPEXECUTIONNOTIFICATION_INSTRMNTLEGEXECGRP	600
 #define MAX_CLIPRESPONSE_CROSSREQUESTACKSIDEGRP         	2
@@ -5867,7 +6008,6 @@ typedef struct
 #define MAX_ENTERBASKETTRADEREQUEST_BASKETROOTPARTYGRP  	2
 #define MAX_ENTERBASKETTRADEREQUEST_INSTRMTMATCHSIDEGRP 	199
 #define MAX_ENTERBASKETTRADEREQUEST_BASKETSIDEALLOCGRP  	398
-#define MAX_ENTERBASKETTRADEREQUEST_BASKETSIDEALLOCGRP_R90	198
 #define MAX_ENTERCLIPREQUEST_CROSSREQUESTSIDEGRP        	2
 #define MAX_ENTERCLIPREQUEST_SIDECROSSLEGGRP            	40
 #define MAX_ENTERTESTRADEREQUEST_SIDEALLOCGRP           	99
@@ -5884,18 +6024,24 @@ typedef struct
 #define MAX_MODIFYBASKETTRADEREQUEST_BASKETROOTPARTYGRP 	2
 #define MAX_MODIFYBASKETTRADEREQUEST_INSTRMTMATCHSIDEGRP	199
 #define MAX_MODIFYBASKETTRADEREQUEST_BASKETSIDEALLOCGRP 	398
-#define MAX_MODIFYBASKETTRADEREQUEST_BASKETSIDEALLOCGRP_R90	198
 #define MAX_MODIFYORDERCOMPLEXREQUEST_LEGORDGRP         	20
+#define MAX_MODIFYORDERNRRESPONSE_ORDEREVENTGRP         	100
+#define MAX_MODIFYORDERRESPONSE_ORDEREVENTGRP           	100
 #define MAX_MODIFYTESTRADEREQUEST_SIDEALLOCGRP          	99
 #define MAX_MODIFYTESTRADEREQUEST_TRDINSTRMNTLEGGRP     	20
 #define MAX_NEWORDERCOMPLEXREQUEST_LEGORDGRP            	20
+#define MAX_NEWORDERNRRESPONSE_ORDEREVENTGRP            	100
+#define MAX_NEWORDERRESPONSE_ORDEREVENTGRP              	100
 #define MAX_ORDEREXECNOTIFICATION_FILLSGRP              	100
 #define MAX_ORDEREXECNOTIFICATION_INSTRMNTLEGEXECGRP    	600
+#define MAX_ORDEREXECNOTIFICATION_ORDEREVENTGRP         	100
 #define MAX_ORDEREXECREPORTBROADCAST_LEGORDGRP          	20
 #define MAX_ORDEREXECREPORTBROADCAST_FILLSGRP           	100
 #define MAX_ORDEREXECREPORTBROADCAST_INSTRMNTLEGEXECGRP 	600
+#define MAX_ORDEREXECREPORTBROADCAST_ORDEREVENTGRP      	100
 #define MAX_ORDEREXECRESPONSE_FILLSGRP                  	100
 #define MAX_ORDEREXECRESPONSE_INSTRMNTLEGEXECGRP        	600
+#define MAX_ORDEREXECRESPONSE_ORDEREVENTGRP             	100
 #define MAX_PRETRADERISKLIMITRESPONSE_RISKLIMITSRPTGRP  	64
 #define MAX_PRETRADERISKLIMITSDEFINITIONREQUEST_RISKLIMITQTYGRP	2
 #define MAX_QUOTEACTIVATIONNOTIFICATION_NOTAFFECTEDSECURITIESGRP	500
@@ -5903,6 +6049,10 @@ typedef struct
 #define MAX_QUOTEEXECUTIONREPORT_QUOTEEVENTGRP          	100
 #define MAX_QUOTEEXECUTIONREPORT_QUOTELEGEXECGRP        	600
 #define MAX_SRQSCREATEDEALNOTIFICATION_ORDERBOOKITEMGRP 	26
+#define MAX_SRQSCREATEDEALNOTIFICATION_SRQSTARGETPARTYTRDGRP	30
+#define MAX_SRQSDEALNOTIFICATION_SRQSTARGETPARTYTRDGRP  	30
+#define MAX_SRQSDEALRESPONSE_SRQSQUOTEGRP               	30
+#define MAX_SRQSHITQUOTEREQUEST_SRQSHITQUOTEGRP         	30
 #define MAX_SRQSINQUIRESMARTRESPONDENTRESPONSE_SMARTPARTYDETAILGRP	1000
 #define MAX_SRQSNEGOTIATIONREQUESTERNOTIFICATION_TARGETPARTIES	50
 #define MAX_SRQSOPENNEGOTIATIONNOTIFICATION_QUOTREQLEGSGRP	20
@@ -5916,16 +6066,13 @@ typedef struct
 #define MAX_TESAPPROVEBROADCAST_INSTRUMENTATTRIBUTEGRP  	6
 #define MAX_TESAPPROVEBROADCAST_UNDERLYINGSTIPGRP       	1
 #define MAX_TESBROADCAST_SIDEALLOCGRPBC                 	99
-#define MAX_TESBROADCAST_SIDEALLOCGRPBC_R90             	30
 #define MAX_TESBROADCAST_TRDINSTRMNTLEGGRP              	20
 #define MAX_TESBROADCAST_INSTRUMENTEVENTGRP             	2
 #define MAX_TESBROADCAST_INSTRUMENTATTRIBUTEGRP         	6
 #define MAX_TESBROADCAST_UNDERLYINGSTIPGRP              	1
 #define MAX_TESREVERSALBROADCAST_SIDEALLOCGRPBC         	99
-#define MAX_TESREVERSALBROADCAST_SIDEALLOCGRPBC_R90     	30
 #define MAX_TESTRADEBROADCAST_SRQSRELATEDTRADEIDGRP     	12
 #define MAX_TESUPLOADBROADCAST_SIDEALLOCEXTGRP          	99
-#define MAX_TESUPLOADBROADCAST_SIDEALLOCEXTGRP_R90      	30
 #define MAX_TESUPLOADBROADCAST_TRDINSTRMNTLEGGRP        	20
 #define MAX_TESUPLOADBROADCAST_INSTRUMENTEVENTGRP       	2
 #define MAX_TESUPLOADBROADCAST_INSTRUMENTATTRIBUTEGRP   	6
@@ -5977,6 +6124,8 @@ typedef struct
 #define ENUM_BASKETTRADEREPORTTYPE_SUBMIT                0
 #define ENUM_BASKETTRADEREPORTTYPE_ADDENDUM              4
 #define ENUM_BASKETTRADEREPORTTYPE_NO_WAS_SUBSTITUE      5
+#define ENUM_BIDPXISLOCKED_NO                            0
+#define ENUM_BIDPXISLOCKED_YES                           1
 #define LEN_COMPLIANCETEXT                               20
 #define ENUM_COMPRESSIONACTION_START_COMPRESSION         1
 #define ENUM_COMPRESSIONACTION_COMMIT_COMPRESSION        2
@@ -6098,6 +6247,7 @@ typedef struct
 #define ENUM_EXECRESTATEMENTREASON_PRODUCT_ASSIGNMENT_CHANGE 297
 #define ENUM_EXECRESTATEMENTREASON_REFERENCE_PRICE_CHANGE 298
 #define ENUM_EXECRESTATEMENTREASON_TICK_RULE_CHANGE      300
+#define ENUM_EXECRESTATEMENTREASON_MARKET_ORDER_UNCROSSING 302
 #define ENUM_EXECRESTATEMENTREASON_QRS_EXPIRY            316
 #define ENUM_EXECRESTATEMENTREASON_CLIP_EXECUTION        340
 #define ENUM_EXECRESTATEMENTREASON_CLIP_ARRANGEMENT_TIME_OUT 343
@@ -6239,6 +6389,7 @@ typedef struct
 #define ENUM_MASSACTIONREASON_MEMBER_DISABLE             117
 #define ENUM_MASSACTIONREASON_INSTRUMENT_KNOCK_OUT_REVERTED 118
 #define ENUM_MASSACTIONREASON_AUTOMATIC_QUOTE_DELETION   119
+#define ENUM_MASSACTIONREASON_OUTSIDE_QUOTING_PERIOD     120
 #define ENUM_MASSACTIONSUBTYPE_BOOK_OR_CANCEL            1
 #define ENUM_MASSACTIONTYPE_SUSPEND_QUOTES               1
 #define ENUM_MASSACTIONTYPE_RELEASE_QUOTES               2
@@ -6332,6 +6483,8 @@ typedef struct
 #define LEN_NETWORKMSGID                                 8
 #define ENUM_NUMBEROFRESPDISCLOSUREINSTRUCTION_NO        0
 #define ENUM_NUMBEROFRESPDISCLOSUREINSTRUCTION_YES       1
+#define ENUM_OFFERPXISLOCKED_NO                          0
+#define ENUM_OFFERPXISLOCKED_YES                         1
 #define LEN_ORDSTATUS                                    1
 #define ENUM_ORDSTATUS_NEW                               "0"
 #define ENUM_ORDSTATUS_PARTIALLY_FILLED                  "1"
@@ -6352,9 +6505,12 @@ typedef struct
 #define LEN_ORDERCATEGORY                                1
 #define ENUM_ORDERCATEGORY_ORDER                         "1"
 #define ENUM_ORDERCATEGORY_QUOTE                         "2"
+#define ENUM_ORDEREVENTREASON_SMP                        100
 #define ENUM_ORDERORIGINATION_DIRECT_ACCESS_OR_SPONSORED_ACCESS_CUSTOMER 5
 #define ENUM_ORDERQTYDISCLOSUREINSTRUCTION_NO            0
 #define ENUM_ORDERQTYDISCLOSUREINSTRUCTION_YES           1
+#define ENUM_ORDERQTYISLOCKED_NO                         0
+#define ENUM_ORDERQTYISLOCKED_YES                        1
 #define LEN_ORDERROUTINGINDICATOR                        1
 #define ENUM_ORDERROUTINGINDICATOR_YES                   "Y"
 #define ENUM_ORDERROUTINGINDICATOR_NO                    "N"
@@ -6377,6 +6533,7 @@ typedef struct
 #define LEN_PAD5                                         5
 #define LEN_PAD5_1                                       5
 #define LEN_PAD6                                         6
+#define LEN_PAD6_1                                       6
 #define LEN_PAD6_2                                       6
 #define LEN_PAD7                                         7
 #define LEN_PAD7_1                                       7
@@ -6437,7 +6594,13 @@ typedef struct
 #define ENUM_PRODUCTCOMPLEX_FLEXIBLE_SIMPLE_INSTRUMENT   10
 #define ENUM_PUTORCALL_PUT                               0
 #define ENUM_PUTORCALL_CALL                              1
+#define ENUM_QUOTECANCELREASON_EXPIRED                   5
 #define ENUM_QUOTECANCELTYPE_CANCEL_ALL_QUOTES           4
+#define LEN_QUOTECONDITION                               1
+#define ENUM_QUOTECONDITION_ACTIVE                       "A"
+#define ENUM_QUOTECONDITION_CLOSED                       "B"
+#define ENUM_QUOTECONDITION_SUSPENDED                    "z"
+#define ENUM_QUOTECONDITION_EXPIRED                      "8"
 #define ENUM_QUOTEENTRYREJECTREASON_UNKNOWN_SECURITY     1
 #define ENUM_QUOTEENTRYREJECTREASON_DUPLICATE_QUOTE      6
 #define ENUM_QUOTEENTRYREJECTREASON_INVALID_PRICE        8
@@ -6487,6 +6650,7 @@ typedef struct
 #define ENUM_QUOTEENTRYREJECTREASON_TOO_MANY_ORDERS_AND_QUOTES_IN_ORDER_BOOK 163
 #define ENUM_QUOTEENTRYREJECTREASON_INACTIVE_COVER       164
 #define ENUM_QUOTEENTRYREJECTREASON_INDICATIVE_QUOTE_NOT_ALLOWED_IN_CURRENT_STATE 165
+#define ENUM_QUOTEENTRYREJECTREASON_CONTRACT_CANNOT_BE_TRADED_DUE_TO_INSUFFICIENT_ELIGIBILITY 166
 #define ENUM_QUOTEENTRYSTATUS_ACCEPTED                   0
 #define ENUM_QUOTEENTRYSTATUS_REJECTED                   5
 #define ENUM_QUOTEENTRYSTATUS_REMOVED_AND_REJECTED       6
@@ -6508,6 +6672,7 @@ typedef struct
 #define ENUM_QUOTEEVENTTYPE_REMOVED_QUOTE_SIDE           3
 #define ENUM_QUOTEEVENTTYPE_PARTIALLY_FILLED             4
 #define ENUM_QUOTEEVENTTYPE_FILLED                       5
+#define ENUM_QUOTEEVENTTYPE_REMOVED_QUANTITY             6
 #define ENUM_QUOTEINSTRUCTION_DO_NOT_QUOTE               0
 #define ENUM_QUOTEINSTRUCTION_QUOTE                      1
 #define LEN_QUOTEREQID                                   20
@@ -6608,6 +6773,8 @@ typedef struct
 #define ENUM_ROOTPARTYSUBIDTYPE_BROKER                   4003
 #define ENUM_SECONDARYGATEWAYSTATUS_STANDBY              0
 #define ENUM_SECONDARYGATEWAYSTATUS_ACTIVE               1
+#define ENUM_SELECTIVEREQUESTFORQUOTERTMSERVICESTATUS_UNAVAILABLE 0
+#define ENUM_SELECTIVEREQUESTFORQUOTERTMSERVICESTATUS_AVAILABLE 1
 #define ENUM_SELECTIVEREQUESTFORQUOTESERVICESTATUS_UNAVAILABLE 0
 #define ENUM_SELECTIVEREQUESTFORQUOTESERVICESTATUS_AVAILABLE 1
 #define ENUM_SESSIONMODE_HF                              1
@@ -6662,6 +6829,8 @@ typedef struct
 #define LEN_SIDECOMPLIANCETEXT                           20
 #define ENUM_SIDEDISCLOSUREINSTRUCTION_NO                0
 #define ENUM_SIDEDISCLOSUREINSTRUCTION_YES               1
+#define ENUM_SIDEISLOCKED_NO                             0
+#define ENUM_SIDEISLOCKED_YES                            1
 #define ENUM_SIDELIQUIDITYIND_ADDED_LIQUIDITY            1
 #define ENUM_SIDELIQUIDITYIND_REMOVED_LIQUIDITY          2
 #define ENUM_SIDELIQUIDITYIND_AUCTION                    4
@@ -6696,6 +6865,7 @@ typedef struct
 #define ENUM_TRADSESMODE_PRODUCTION                      3
 #define ENUM_TRADSESMODE_ACCEPTANCE                      4
 #define ENUM_TRADSESMODE_DISASTER_RECOVERY               5
+#define ENUM_TRADEAGGREGATIONTRANSTYPE_NEW               0
 #define ENUM_TRADEALLOCSTATUS_PENDING                    1
 #define ENUM_TRADEALLOCSTATUS_APPROVED                   2
 #define ENUM_TRADEALLOCSTATUS_AUTO_APPROVED              3
